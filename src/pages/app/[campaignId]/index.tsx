@@ -4,11 +4,13 @@ import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
+import SortablePackages from "@/components/sortable-questions";
 import { QuestionCounts } from "@/types/analytics";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
   Cog6ToothIcon,
+  PlusIcon,
   WrenchIcon,
 } from "@heroicons/react/16/solid";
 import { getStore } from "@netlify/blobs";
@@ -24,8 +26,7 @@ import {
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -36,6 +37,8 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
 
+  const [questions, setQuestions] = useState(campaign.questions ?? []);
+
   const canSave = useMemo(() => {
     if (emoji !== campaign.icon) return true;
     if (title !== campaign.title) return true;
@@ -43,6 +46,18 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
 
     return false;
   }, [emoji, title, desc]);
+
+  function addSingleChoice() {
+    setQuestions([
+      ...questions,
+      {
+        type: "single-select",
+        title: "",
+        options: [],
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+  }
 
   return (
     <form className="flex flex-col">
@@ -97,12 +112,32 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
               </Tab>
             </TabList>
             <TabPanels>
-              <TabPanel>
-                <p className="mt-4 leading-6 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                  diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                  aliquyam erat.
-                </p>
+              <TabPanel className="mt-5">
+                <SortablePackages
+                  questions={questions ?? []}
+                  id="sortable-questions"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={addSingleChoice}
+                    type="button"
+                    className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none"
+                  >
+                    <PlusIcon className="w-8 h-8 mx-auto" />
+                    <span className="mt-2 block text-sm font-semibold text-gray-900">
+                      Add single choice question
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none"
+                  >
+                    <PlusIcon className="w-8 h-8 mx-auto" />
+                    <span className="mt-2 block text-sm font-semibold text-gray-900">
+                      Add text question
+                    </span>
+                  </button>
+                </div>
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab />
@@ -188,8 +223,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   });
 
   console.log(questionCounts);
-
-  console.log({ updatedCampaign, campaign });
 
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);

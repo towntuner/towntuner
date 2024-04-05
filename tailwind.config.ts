@@ -40,7 +40,10 @@ const config: Config = {
             strong: colors.gray[900],
             inverted: colors.white,
           },
+        
+        
         },
+      
       },
       boxShadow: {
         // light
@@ -60,6 +63,10 @@ const config: Config = {
         "tremor-default": ["0.875rem", { lineHeight: "1.25rem" }],
         "tremor-title": ["1.125rem", { lineHeight: "1.75rem" }],
         "tremor-metric": ["1.875rem", { lineHeight: "2.25rem" }],
+      },
+      fontFamily: {
+        merri: ["var(--font-merriweather)", "sans-serif"],
+
       },
     },
   },

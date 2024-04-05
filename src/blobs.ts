@@ -1,5 +1,5 @@
 import { getStore } from "@netlify/blobs";
 
-export function getResponseStore(surveyId: string) {
-  return getStore(`responses:${surveyId}`);
+export function getResponseStore(campaignId: string) {
+  return getStore(`responses:${campaignId}`);
 }
