@@ -95,7 +95,7 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
             onValueChange={setDesc}
           />
         </div>
-        <div className="mt-12">
+        <div className="mt-12 mb-8">
           <TabGroup>
             <TabList variant="line" defaultValue="1">
               <Tab icon={WrenchIcon} value="1">
