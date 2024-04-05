@@ -128,7 +128,7 @@ export default function SubmissionPage({
   );
 
   return (
-    <main className="font-merri  text-[#072448]">
+    <main className=" text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
         <Description text=
