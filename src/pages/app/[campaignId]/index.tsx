@@ -118,7 +118,7 @@ export default function CampaignHome({
           />
         </div>
       </div>
-      <div className="flex flex-col w-full max-w-4xl mx-auto">
+      <div className="flex flex-col w-full max-w-4xl mx-auto mb-20">
         <div className="flex flex-col items-start gap-3">
           <EmojiButton onEmojiSelect={setEmoji}>
             <div className="rounded-2xl bg-white -mt-10 z-10 text-5xl p-3 border-tremor-border border hover:bg-tremor-background-muted transition duration-100">
