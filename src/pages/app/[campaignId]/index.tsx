@@ -4,6 +4,7 @@ import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
+import { QuestionCounts } from "@/types/analytics";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
@@ -160,12 +161,33 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const responseStore = getResponseStore(campaignId);
 
+  const answersPerUser: string[][] = [
+    ["Yes", "No", "Yes"],
+    ["Yes", "Yes", "No"],
+    ["Yes", "Maybe", "Yes"],
+  ];
+
   for await (const submissions of responseStore.list({ paginate: true })) {
     for (const submission of submissions.blobs) {
       const content = await responseStore.get(submission.key, { type: "json" });
-      console.log("hallo", content);
+      answersPerUser.push(content);
     }
   }
+
+  const questionCounts: QuestionCounts = {};
+
+  answersPerUser.forEach((answers: string[]) => {
+    answers.forEach((answer: string, index: number) => {
+      const question = `Question ${index + 1}`;
+      if (!questionCounts[question]) {
+        questionCounts[question] = {};
+      }
+      questionCounts[question][answer] =
+        (questionCounts[question][answer] || 0) + 1;
+    });
+  });
+
+  console.log(questionCounts);
 
   console.log({ updatedCampaign, campaign });
 
