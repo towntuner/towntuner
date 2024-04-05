@@ -15,7 +15,8 @@ export interface Survey {
   deadline: string;
   questions: {
     question: string;
-    type: "multiple choice" | "text";
+    type: "single-select" | "text";
+    options?: { value: string }[];
   }[];
 }
 
@@ -30,7 +31,8 @@ export const getServerSideProps = (async () => {
     questions: [
       {
         question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
-        type: "multiple choice",
+        type: "single-select",
+        options: [{ value: "Ja" }, { value: "Nein" }],
       },
       {
         question:

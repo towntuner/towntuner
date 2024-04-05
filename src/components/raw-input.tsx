@@ -31,7 +31,7 @@ const inputStyles = tv({
     // base
     "relative block w-full appearance-none rounded-md border px-2.5 py-1.5 shadow-sm outline-none sm:text-3xl font-semibold font-sans",
     // border color
-    "border-gray-300 dark:border-gray-800",
+    "border-tremor-border dark:border-gray-800",
     // text color
     "text-gray-900 dark:text-gray-50",
     // placeholder color
@@ -47,6 +47,7 @@ const inputStyles = tv({
     // "aria-[invalid=true]:dark:ring-red-400/20 aria-[invalid=true]:ring-2 aria-[invalid=true]:ring-red-200 aria-[invalid=true]:border-red-500 invalid:ring-2 invalid:ring-red-200 invalid:border-red-500"
     // remove search cancel button (optional)
     "[&::--webkit-search-cancel-button]:hidden [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden",
+    "hover:bg-tremor-background-muted transition duration-100",
   ],
   variants: {
     hasError: {

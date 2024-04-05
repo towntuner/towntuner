@@ -10,7 +10,6 @@ import { Button } from "@tremor/react";
 import Banner from "../../../components/Banner";
 import { Survey } from "./index";
 
-
 export const getServerSideProps = (async () => {
   // Fetch data from external API
   console.log("hello from getServerSideProps");
@@ -23,7 +22,8 @@ export const getServerSideProps = (async () => {
     questions: [
       {
         question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
-        type: "multiple choice",
+        type: "single-select",
+        options: [{ value: "Ja" }, { value: "Nein" }],
       },
       {
         question:
