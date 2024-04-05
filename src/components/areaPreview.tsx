@@ -19,11 +19,11 @@ export default function AreaPreview(props: { zoomLevel?: number, longitude: numb
       ]}
       maxZoom={zoomLevel}
       minZoom={zoomLevel}
-      style={{ width: 600, height: 600 }}
+      style={{ width: 300, height: 300 }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
     >
       <Marker longitude={props.longitude} latitude={props.latitude}>
-        <Image src={marker} alt="marker" width={250} />
+        <Image src={marker} alt="marker" width={200} />
       </Marker>
     </Map>
   );
