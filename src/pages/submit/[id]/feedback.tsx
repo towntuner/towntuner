@@ -7,7 +7,7 @@ import mock_location from "./mock_location.png";
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
-import { Survey, Banner } from "../[id]";
+import { Survey, Banner } from ".";
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
