@@ -26,15 +26,54 @@ export default function AnalyticsTab({
     setNoAnswers(true);
   }
 
+  if (!questions) {
+    // TODO: Remove this -> show that you need to create Answers to see analytics
+    questions = [
+      {
+        type: "single-select",
+        title: "What is your favorite color?",
+        options: [
+          { value: "Red" },
+          { value: "Blue" },
+          { value: "Green" },
+          { value: "Yellow" },
+        ],
+        createdAt: new Date().toISOString(),
+      },
+      {
+        type: "single-select",
+        title: "What is your favorite animal?",
+        options: [
+          { value: "Dog" },
+          { value: "Cat" },
+          { value: "Bird" },
+          { value: "Fish" },
+        ],
+        createdAt: new Date().toISOString(),
+      },
+      {
+        type: "text",
+        title: "What is your favorite food?",
+        createdAt: new Date().toISOString(),
+      },
+    ];
+  }
+
   if (answersPerUser && questions) {
     answersPerUser.forEach((answers: string[]) => {
       answers.forEach((answer: string, index: number) => {
         const question = questions[index].title;
-        if (!questionCounts[question]) {
-          questionCounts[question] = {};
+        const type = questions[index].type;
+
+        if (!questionCounts[type]) {
+          questionCounts[type] = {};
         }
-        questionCounts[question][answer] =
-          (questionCounts[question][answer] || 0) + 1;
+        if (!questionCounts[type][question]) {
+          questionCounts[type][question] = {};
+        }
+
+        questionCounts[type][question][answer] =
+          (questionCounts[type][question][answer] || 0) + 1;
       });
     });
   }
@@ -92,25 +131,47 @@ export default function AnalyticsTab({
                 </div>
               </Card>
             </div>
-            {/* 
-        <h3 className="text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong my-4 ">
-          Single-select Questions
-        </h3>
-        <div className="grid grid-cols-2 gap-4">
-          {singleSelectQuestions.map((question) => (
-            <AnalyticalMCCard question={question as QuestionMC} />
-          ))}
-        </div>
+            <h3 className="text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong my-4 ">
+              Single-select Questions
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {Object.entries(questionCounts).map(([type, questions]) => {
+                if (type === "single-select") {
+                  return Object.entries(questions).map(
+                    ([question, answers]) => (
+                      <AnalyticalMCCard
+                        key={question}
+                        question={question}
+                        answers={answers}
+                      />
+                    )
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
 
-        <h3 className="my-4 text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Text Questions
-        </h3>
-        <div>
-          {textQuestions.map((question) => (
-            <AnalyticalTextCard question={question as QuestionText} />
-          ))}
-        </div>
-          */}
+            <h3 className="my-4 text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
+              Text Questions
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {Object.entries(questionCounts).map(([type, questions]) => {
+                if (type === "text") {
+                  return Object.entries(questions).map(
+                    ([question, answers]) => (
+                      <AnalyticalTextCard
+                        key={question}
+                        question={question}
+                        answers={answers}
+                      />
+                    )
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
           </>
         )}
       </div>

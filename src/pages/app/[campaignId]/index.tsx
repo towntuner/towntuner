@@ -4,8 +4,8 @@ import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
+import { SocialsTab } from "@/components/socialsTab";
 import SortablePackages from "@/components/sortable-questions";
-import { QuestionCounts } from "@/types/analytics";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
@@ -14,7 +14,7 @@ import {
   WrenchIcon,
 } from "@heroicons/react/16/solid";
 import { getStore } from "@netlify/blobs";
-import { RiExternalLinkFill } from "@remixicon/react";
+import { RiExternalLinkFill, RiShare2Fill } from "@remixicon/react";
 import {
   Button,
   Tab,
@@ -68,6 +68,8 @@ export default function CampaignHome({
     ]);
   }
 
+  const campaignId = router.query.campaignId as string;
+
   return (
     <form className="flex flex-col">
       <Header backHref="/app" />
@@ -108,7 +110,7 @@ export default function CampaignHome({
           />
         </div>
 
-        <Link href={`/submit/${router.query.campaignId}`}>
+        <Link href={`/submit/${campaignId}`}>
           <Button
             icon={RiExternalLinkFill}
             className="mt-12"
@@ -124,6 +126,9 @@ export default function CampaignHome({
             <TabList variant="line" defaultValue="1">
               <Tab icon={WrenchIcon} value="1">
                 Form Builder
+              </Tab>
+              <Tab icon={RiShare2Fill} value="2">
+                Socials
               </Tab>
               <Tab icon={ChartBarIcon} value="2">
                 Analytics
@@ -159,6 +164,9 @@ export default function CampaignHome({
                     </span>
                   </button>
                 </div>
+              </TabPanel>
+              <TabPanel className="mt-5">
+                <SocialsTab campaignId={campaignId} />
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab

@@ -1,4 +1,5 @@
 import { ImageResponse } from "@vercel/og";
+import { getCampaign } from "../submit/[id]/feedback";
 
 export const config = {
   runtime: "edge",
@@ -14,11 +15,16 @@ async function fetchImageAsCSSRule(url: string) {
 
 export default async function handler(request: Request) {
   const url = new URL(request.url);
-  const title =
-    url.searchParams.get("title") ??
-    "Sollte hier ein Fahrradweg hindurchführen?";
-  const image =
-    url.searchParams.get("image") ?? "https://i.wfcdn.de/teaser/1920/67538.png";
+  const campaignId = url.searchParams.get("campaignId");
+  if (!campaignId)
+    return new Response("please provide campaignId as query param", {
+      status: 400,
+    });
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) return new Response(null, { status: 404 });
+
+  const title = campaign.title;
+  const image = "https://i.wfcdn.de/teaser/1920/67538.png";
 
   const socialMediaPost = (
     <div
@@ -59,5 +65,10 @@ export default async function handler(request: Request) {
     height: 1080,
   };
 
-  return new ImageResponse(socialMediaPost, targetResolution);
+  return new ImageResponse(socialMediaPost, {
+    ...targetResolution,
+    headers: {
+      "Content-Disposition": 'attachment; filename="instagram_ad.png"',
+    },
+  });
 }

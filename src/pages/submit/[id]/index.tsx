@@ -32,7 +32,12 @@ export default function SubmissionPage({
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
         <p className="text-xl m-5">Sind Sie häufig in {campaign.location}?</p>
-        <AreaPreview latitude={52.39170852631827} longitude={13.126965482312585}/>
+        <div className="mb-5">
+          <AreaPreview
+            latitude={52.39170852631827}
+            longitude={13.126965482312585}
+          />
+        </div>
         <div className="content-center space-x-10">
           <Link href={`/submit/${router.query.id}/summary`}>
             <MyButton text="Ja">
