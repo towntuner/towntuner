@@ -1,9 +1,11 @@
+import { getResponseStore } from "@/blobs";
 import AnalyticsTab from "@/components/analyticsTab";
 import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
 import SortablePackages from "@/components/sortable-questions";
+import { QuestionCounts } from "@/types/analytics";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
@@ -12,6 +14,7 @@ import {
   WrenchIcon,
 } from "@heroicons/react/16/solid";
 import { getStore } from "@netlify/blobs";
+import { RiExternalLinkFill } from "@remixicon/react";
 import {
   Button,
   Tab,
@@ -24,13 +27,21 @@ import {
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
+  answersPerUser: string[][];
 }
 
-export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
+export default function CampaignHome({
+  campaign,
+  answersPerUser,
+  ...rest
+}: CampaignHomeProps) {
+  const router = useRouter();
   const [emoji, setEmoji] = useState(campaign.icon);
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
@@ -96,6 +107,18 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
             onValueChange={setDesc}
           />
         </div>
+
+        <Link href={`/submit/${router.query.campaignId}`}>
+          <Button
+            icon={RiExternalLinkFill}
+            className="mt-12"
+            iconPosition="right"
+            variant="light"
+          >
+            Open Survey
+          </Button>
+        </Link>
+
         <div className="mt-12 mb-8">
           <TabGroup>
             <TabList variant="line" defaultValue="1">
@@ -138,7 +161,10 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
                 </div>
               </TabPanel>
               <TabPanel>
-                <AnalyticsTab />
+                <AnalyticsTab
+                  answersPerUser={answersPerUser}
+                  questions={campaign.questions}
+                />
               </TabPanel>
               <TabPanel>
                 <SettingsTab />
@@ -192,6 +218,18 @@ export const getServerSideProps: GetServerSideProps = async ({
     icon: emoji ?? campaign.icon,
   };
 
+  const responseStore = getResponseStore(campaignId);
+  const answersPerUser: string[][] = [];
+
+  for await (const submissions of responseStore.list({ paginate: true })) {
+    for (const submission of submissions.blobs) {
+      const content = await responseStore.get(submission.key, { type: "json" });
+      answersPerUser.push(content);
+    }
+  }
+
+  console.log("index.tsx", answersPerUser);
+
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);
 
@@ -204,6 +242,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 
   return {
-    props: { campaign },
+    props: { campaign, answersPerUser },
   };
 };
