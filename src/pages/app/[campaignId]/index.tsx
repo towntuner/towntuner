@@ -1,3 +1,4 @@
+import { getResponseStore } from "@/blobs";
 import AnalyticsTab from "@/components/analyticsTab";
 import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
@@ -156,6 +157,15 @@ export const getServerSideProps: GetServerSideProps = async ({
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
   };
+
+  const responseStore = getResponseStore(campaignId);
+
+  for await (const submissions of responseStore.list({ paginate: true })) {
+    for (const submission of submissions.blobs) {
+      const content = await responseStore.get(submission.key, { type: "json" });
+      console.log("hallo", content);
+    }
+  }
 
   console.log({ updatedCampaign, campaign });
 

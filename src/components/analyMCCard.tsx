@@ -1,6 +1,9 @@
+import { getResponseStore } from "@/blobs";
 import { QuestionMC } from "@/types/questions";
+import { getStore } from "@netlify/blobs";
 import { BarChart } from "@tremor/react";
 import { Card } from "@tremor/react";
+import { Context } from "vm";
 
 const chartdata = [
   {

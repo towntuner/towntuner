@@ -16,7 +16,7 @@ export default function AnalyticalTextCard({
         Manage your personal details, workspace governance and notifications.
       </p>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-4 auto-rows-max">
         <Card className="group">
           <div className="flex items-center space-x-4">
             <p className=" text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content-strong">

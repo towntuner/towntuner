@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const campaignsStore = getStore("campaigns");
   const { blobs } = await campaignsStore.list();
   let campaigns: CampaignCardProps[] = [];
-  await Promise.all(
+  campaigns = await Promise.all(
     blobs.map(async (blob) => {
       let campaignCard: CampaignCardProps = {} as CampaignCardProps;
       campaignCard.campaign = await campaignsStore.get(blob.key, {
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       });
       campaignCard.key = blob.key;
       console.log(campaignCard);
-      campaigns.push(campaignCard);
+      return campaignCard;
     })
   );
   console.log(campaigns);
