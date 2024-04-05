@@ -1,18 +1,13 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import Image from "next/image";
-import mock_location from "./mock_location.png";
+import mock_project_image from "./mock_radweg_stahnsdorfer.jpg";
 
-export interface Survey {
-  title: string;
-  description: string;
-  location: string;
-  image?: Blob;
-  deadline: string;
-  questions: {
-    question: string;
-    type: "multiple choice" | "text";
-  }[];
-}
+import { RiArrowRightLine } from "@remixicon/react";
+import { Button } from "@tremor/react";
+
+import { Survey, Banner } from "../[id]";
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
@@ -39,34 +34,41 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
-
-export function Banner(props: { title: string }) {
-
-  return (
-    <div className="relative isolate  gap-x-6 overflow-hidden bg-blue-200 px-6 py-2.5 ">
-      <h1 className="text-lg leading-10 text-gray-900 text-center">
-        <strong className="font-semibold">{props.title}</strong>
-      </h1>
-    </div>
-  );
+function projectSummary(survey: Survey) {
+    return <div className="grid justify-items-center">
+        <Image
+            src={mock_project_image}
+            height={300}
+            alt="project image"
+            className="m-5" />
+        <p className="mx-40">{survey.description}</p>
+    </div>;
 }
 
-export default function SubmissionPage({
+export default function ProjectSummaryPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("hello from SubmissionPage");
+  const router = useRouter();
   return (
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Sind Sie häufig in {survey.location}?</p>
-        <Image
-          src={mock_location}
-          height={300}
-          alt="location mock"
-          className="m-5"
-        />
+        {projectSummary(survey)}
+        <div className="flex justify-center">
+          <Link href={`/submit/${router.query.id}/feedback`}>
+            <Button
+              icon={RiArrowRightLine}
+              iconPosition="right"
+              variant="light"
+            >
+              Feedback geben
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   );
 }
+
+
