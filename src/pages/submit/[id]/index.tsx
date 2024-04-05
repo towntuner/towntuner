@@ -1,6 +1,10 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import mock_location from "./mock_location.png";
+import { Button } from "@tremor/react";
+import Banner from "../../components/Banner";
+import { Sono } from "next/font/google";
+import Link from "next/link";
 
 export interface Survey {
   title: string;
@@ -16,7 +20,6 @@ export interface Survey {
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
-  console.log("hello from getServerSideProps");
   const survey: Survey = {
     title: "Fahrradweg auf der Stahnsdorfer Straße",
     description:
@@ -39,22 +42,9 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
-
-export function Banner(props: { title: string }) {
-
-  return (
-    <div className="relative isolate  gap-x-6 overflow-hidden bg-blue-200 px-6 py-2.5 ">
-      <h1 className="text-lg leading-10 text-gray-900 text-center">
-        <strong className="font-semibold">{props.title}</strong>
-      </h1>
-    </div>
-  );
-}
-
 export default function SubmissionPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log("hello from SubmissionPage");
   return (
     <main>
       <Banner title={survey.title}></Banner>
@@ -66,6 +56,16 @@ export default function SubmissionPage({
           alt="location mock"
           className="m-5"
         />
+        <div className="content-center space-x-10">
+          <Button variant="primary" color="green">
+            Ja
+          </Button>{" "}
+          <Link href="/end">
+            <Button variant="primary" color="red">
+              Nein
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   );

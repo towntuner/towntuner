@@ -7,7 +7,8 @@ import mock_location from "./mock_location.png";
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
-import { Survey, Banner } from ".";
+import { Survey } from "../[id]";
+import Banner from "@/components/Banner";
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
@@ -38,7 +39,7 @@ export default function SubmissionPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("hello from SubmissionPage");
-  const router = useRouter()
+  const router = useRouter();
   return (
     <main>
       <Banner title={survey.title}></Banner>
