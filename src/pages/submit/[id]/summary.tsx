@@ -1,18 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
-import mock_location from "./mock_location.png";
-
-export interface Survey {
-  title: string;
-  description: string;
-  location: string;
-  image?: Blob;
-  deadline: string;
-  questions: {
-    question: string;
-    type: "multiple choice" | "text";
-  }[];
-}
+import { Survey, Banner } from "../[id]";
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
@@ -39,15 +27,6 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
-export function Banner(props: { title: string }) {
-  return (
-    <div className="relative isolate  gap-x-6 overflow-hidden bg-blue-200 px-6 py-2.5 ">
-      <h1 className="text-lg leading-10 text-gray-900 text-center">
-        <strong className="font-semibold">{props.title}</strong>
-      </h1>
-    </div>
-  );
-}
 
 export default function SubmissionPage({
   survey,
@@ -57,13 +36,8 @@ export default function SubmissionPage({
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Sind Sie häufig in {survey.location}?</p>
-        <Image
-          src={mock_location}
-          height={300}
-          alt="location mock"
-          className="m-5"
-        />
+        <p className="">{survey.description}</p>
+        
       </div>
     </main>
   );
