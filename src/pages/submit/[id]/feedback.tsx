@@ -6,9 +6,17 @@ import mock_location from "./mock_location.png";
 
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
+import MyButton from "@/components/MyButton";
 
 import { Survey } from "../[id]";
 import Banner from "@/components/Banner";
+
+import { Roboto } from "next/font/google";
+
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const getServerSideProps = (async (context) => {
   // Fetch data from external API
@@ -20,8 +28,13 @@ export const getServerSideProps = (async (context) => {
   console.log("Antwort:" + context.query.response);
   const survey: Survey = {
     title: "Fahrradweg auf der Stahnsdorfer Straße",
-    description:
-      "Wir freuen uns, Ihnen mitteilen zu können, dass ein neuer Fahrradweg entlang der Stahnsdorfer Straße geplant ist, um die Mobilität und Sicherheit für alle Verkehrsteilnehmer zu verbessern. Dieses Projekt zielt darauf ab, den Radverkehr zu fördern und die Lebensqualität der Anwohner zu erhöhen. Der Fahrradweg wird eine sichere Route für Radfahrer bieten, die die Stahnsdorfer Straße nutzen möchten, sei es für den täglichen Pendelverkehr, den Schulweg oder Freizeitaktivitäten. Durch die Schaffung eines separaten Radwegs wird die Sicherheit für Radfahrer und Fußgänger erhöht, indem Konflikte mit dem motorisierten Verkehr reduziert werden. Das Projekt umfasst die Gestaltung eines breiten, gut beleuchteten und gut markierten Fahrradwegs, der den aktuellen Standards entspricht. Es wird auch Grünflächen und Bäume entlang des Weges integrieren, um eine angenehme Umgebung zu schaffen. Wir laden alle Anwohner ein, sich über das Projekt zu informieren und ihre Rückmeldungen zu geben, um sicherzustellen, dass der Fahrradweg die Bedürfnisse der Gemeinschaft bestmöglich erfüllt. Wir freuen uns darauf, gemeinsam zu einer sichereren und nachhaltigeren Verkehrslösung beizutragen.",
+    description: `Ein neuer Fahrradweg entlang der Stahnsdorfer Straße ist geplant, um die Mobilität und Sicherheit zu verbessern. Dies fördert den Radverkehr und erhöht die Lebensqualität.
+      
+      Der Fahrradweg bietet sichere Routen für Pendler, Schüler und Freizeitaktivitäten. Die Sicherheit für Radfahrer und Fußgänger wird durch einen separaten Radweg erhöht.
+      
+      Der breite, gut beleuchtete und markierte Fahrradweg entspricht aktuellen Standards. Grünflächen und Bäume schaffen eine angenehme Umgebung.
+      
+      Anwohner sind eingeladen, sich zu informieren und Feedback zu geben, um sicherzustellen, dass der Fahrradweg ihre Bedürfnisse erfüllt. Gemeinsam tragen wir zu einer sicheren und nachhaltigen Verkehrslösung bei.`,
     location: "Potsdam Griebnitzsee",
     deadline: "24.12.2024",
     questions: [
@@ -48,15 +61,15 @@ export default function SubmissionPage({
   const question_number = 0; //hier muss man dann die Fragen nummer dynmaisch berechnen
   const router = useRouter();
   return (
-    <main>
+    <main className="font-merri">
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        <p className=" grid justify-items-center my-10 mx-20 border-4 p-5 border-sky-600 rounded-lg bg-sky-50">
+        <p className=" grid justify-items-center my-10 px-20 py-20 bg-sky-50 text-s font-thin">
           {survey.description}
         </p>
-        <div className="grid justify-items-center m-10">
+        <div className="grid justify-items-center m-10 text-xl font-extrabold">
           {survey.questions[question_number].question}
-          <div>
+          <div className="flex space-x-4">
             {survey.questions[question_number].options?.map((option) => (
               <form key={option.value}>
                 <input
@@ -71,9 +84,8 @@ export default function SubmissionPage({
                   hidden
                   readOnly
                 ></input>
-                <Button type="submit" className="m-5">
-                  {option.value}
-                </Button>
+
+                <MyButton text={option.value}></MyButton>
               </form>
             ))}
           </div>
