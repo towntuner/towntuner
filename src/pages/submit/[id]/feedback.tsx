@@ -58,15 +58,19 @@ export async function getCampaign(
   // mock until question builder works
   campaign.questions = [
     {
+      title: "Frage 1",
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
+      createdAt: "2021-10-01",
     },
     {
+      title: "Frage 2",
       question:
         "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
+      createdAt: "2021-10-01",
     },
   ];
   return campaign;
