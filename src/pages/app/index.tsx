@@ -1,5 +1,4 @@
-// 'use client';
-import Header from "@/components/Header";
+import Header from "@/components/header";
 import { RiArrowRightUpLine } from "@remixicon/react";
 import { Card, Divider } from "@tremor/react";
 import { getStore } from "@netlify/blobs";
