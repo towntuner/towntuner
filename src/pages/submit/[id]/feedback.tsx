@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 
 import { Button } from "@tremor/react";
 import MyButton from "@/components/MyButton";
+import Description from "@/components/Description";
 
 import Banner from "@/components/Banner";
 import { nanoid } from "nanoid";
@@ -57,27 +58,27 @@ export async function getCampaign(
   // mock until question builder works
   campaign.questions = [
     {
+      title: "Frage 1",
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
+      createdAt: "2021-10-01",
     },
     {
+      title: "Frage 2",
       question:
         "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
+      createdAt: "2021-10-01",
     },
   ];
-
   return campaign;
 }
 
-import { Roboto } from "next/font/google";
 
-const roboto = Roboto({
-  weight: "400",
-  subsets: ["latin"],
-});
+
+
 
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
@@ -127,17 +128,17 @@ export default function SubmissionPage({
   );
 
   return (
-    <main className="font-merri  text-[#072448]">
+    <main className=" text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className=" grid justify-items-center my-10 px-20 py-20 bg-[#eff9ff]  text-s font-thin">
-          {campaign.description}
-        </p>
+        <Description text=
+          {campaign.description} >  </Description>
+
         <div className="grid justify-items-center m-10 text-xl font-extrabold">
           {campaign.questions[question_number].question}
           <div className="flex space-x-4">
             {campaign.questions[question_number].options?.map((option) => (
-              <form key={option.value} className = "content-evenly ">
+              <form key={option.value} className="content-evenly ">
                 <input
                   name="response"
                   value={option.value}

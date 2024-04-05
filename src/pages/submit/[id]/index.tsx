@@ -9,6 +9,7 @@ import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
 import AreaPreview from "@/components/areaPreview";
 import MyButton from "@/components/MyButton";
+import { getStore } from "@netlify/blobs";
 
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
@@ -19,6 +20,13 @@ export const getServerSideProps = (async (context) => {
       notFound: true,
     };
   }
+
+  const viewsStore = await getStore("views");
+  const views = await viewsStore.get(campaignId, { type: "json" });
+  if (!views) {
+    await viewsStore.setJSON(campaignId, 1);
+  }
+  await viewsStore.setJSON(campaignId, Number(views) + 1);
 
   return { props: { campaign } };
 }) satisfies GetServerSideProps<{ campaign: Campaign }>;
@@ -40,13 +48,10 @@ export default function SubmissionPage({
         </div>
         <div className="content-center space-x-10">
           <Link href={`/submit/${router.query.id}/summary`}>
-            <MyButton text="Ja">
-            </MyButton>{" "}
+            <MyButton text="Ja"></MyButton>{" "}
           </Link>
           <Link href="/end">
-            <MyButton text="Nein">
-    
-            </MyButton>
+            <MyButton text="Nein"></MyButton>
           </Link>
         </div>
       </div>
