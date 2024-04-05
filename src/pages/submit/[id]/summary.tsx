@@ -8,8 +8,8 @@ import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
 import Banner from "../../../components/Banner";
-import { Survey } from "./index";
 import { getSurvey } from "./feedback";
+import { Campaign } from "@/types/campaign";
 
 export const getServerSideProps = (async (context) => {
   const surveyId = context.params!.id as string;
@@ -22,9 +22,9 @@ export const getServerSideProps = (async (context) => {
   }
 
   return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Survey }>;
+}) satisfies GetServerSideProps<{ survey: Campaign }>;
 
-export function ProjectSummary(props: { survey: Survey }) {
+export function ProjectSummary(props: { survey: Campaign }) {
   return (
     <div className="grid justify-items-center">
       <Image

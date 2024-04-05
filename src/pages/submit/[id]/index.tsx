@@ -3,23 +3,10 @@ import Image from "next/image";
 import mock_location from "./mock_location.png";
 import { Button } from "@tremor/react";
 import Banner from "../../../components/Banner";
-import { Sono } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { getSurvey } from "./feedback";
-
-export interface Survey {
-  title: string;
-  description: string;
-  location: string;
-  image?: Blob;
-  deadline: string;
-  questions: {
-    question: string;
-    type: "single-select" | "text";
-    options?: { value: string }[];
-  }[];
-}
+import { Campaign } from "@/types/campaign";
 
 export const getServerSideProps = (async (context) => {
   const surveyId = context.params!.id as string;
@@ -32,7 +19,7 @@ export const getServerSideProps = (async (context) => {
   }
 
   return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Survey }>;
+}) satisfies GetServerSideProps<{ survey: Campaign }>;
 
 export default function SubmissionPage({
   survey,
