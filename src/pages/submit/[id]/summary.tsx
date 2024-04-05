@@ -1,5 +1,12 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import Image from "next/image";
+import mock_project_image from "./mock_radweg_stahnsdorfer.jpg";
+
+import { RiArrowRightLine } from "@remixicon/react";
+import { Button } from "@tremor/react";
+
 import { Survey, Banner } from "../[id]";
 
 export const getServerSideProps = (async () => {
@@ -27,18 +34,41 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
+function projectSummary(survey: Survey) {
+    return <div className="grid justify-items-center">
+        <Image
+            src={mock_project_image}
+            height={300}
+            alt="project image"
+            className="m-5" />
+        <p className="mx-40">{survey.description}</p>
+    </div>;
+}
 
-export default function SubmissionPage({
+export default function ProjectSummaryPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("hello from SubmissionPage");
+  const router = useRouter();
   return (
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="">{survey.description}</p>
-        
+        {projectSummary(survey)}
+        <div className="flex justify-center">
+          <Link href={`/submit/${router.query.id}/feedback`}>
+            <Button
+              icon={RiArrowRightLine}
+              iconPosition="right"
+              variant="light"
+            >
+              Feedback geben
+            </Button>
+          </Link>
+        </div>
       </div>
     </main>
   );
 }
+
+
