@@ -39,7 +39,9 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
+
 export function Banner(props: { title: string }) {
+
   return (
     <div className="relative isolate  gap-x-6 overflow-hidden bg-blue-200 px-6 py-2.5 ">
       <h1 className="text-lg leading-10 text-gray-900 text-center">
