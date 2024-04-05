@@ -1,10 +1,9 @@
 import { Card } from "@tremor/react";
 import AnalyticalMCCard from "./analyMCCard";
 import AnalyticalTextCard from "./analyTextCard";
-import { Question, QuestionMC, QuestionText } from "@/types/questions";
-import { useEffect, useState } from "react";
+import { Question } from "@/types/questions";
+import { useState } from "react";
 import { QuestionCounts } from "@/types/analytics";
-import { create } from "domain";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -13,14 +12,14 @@ function classNames(...classes: any) {
 export default function AnalyticsTab({
   answersPerUser,
   questions,
+  views,
 }: {
   answersPerUser: string[][];
   questions: Question[];
+  views: string;
 }) {
   const [noAnswers, setNoAnswers] = useState(false);
   const questionCounts: QuestionCounts = {};
-
-  console.log("QUESTIONS", questions);
 
   if (!answersPerUser) {
     setNoAnswers(true);
@@ -105,8 +104,9 @@ export default function AnalyticsTab({
                 </p>
                 <div className="mt-2 flex items-baseline space-x-2.5">
                   <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                    12,506
+                    {views}
                   </p>
+                  {/* 
                   <span
                     className={classNames(
                       "positive" == "positive"
@@ -117,6 +117,7 @@ export default function AnalyticsTab({
                   >
                     +14,3%
                   </span>
+                */}
                 </div>
               </Card>
               <Card className="mb-5" decoration="top" decorationColor="indigo">

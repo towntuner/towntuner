@@ -34,11 +34,13 @@ import { useMemo, useState } from "react";
 interface CampaignHomeProps {
   campaign: Campaign;
   answersPerUser: string[][];
+  views: number;
 }
 
 export default function CampaignHome({
   campaign,
   answersPerUser,
+  views,
   ...rest
 }: CampaignHomeProps) {
   const router = useRouter();
@@ -170,6 +172,7 @@ export default function CampaignHome({
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab
+                  views={views}
                   answersPerUser={answersPerUser}
                   questions={campaign.questions}
                 />
@@ -236,7 +239,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     }
   }
 
-  console.log("index.tsx", answersPerUser);
+  const viewsStore = await getStore("views");
+  const views = await viewsStore.get(campaignId, { type: "json" });
 
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);
@@ -250,6 +254,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 
   return {
-    props: { campaign, answersPerUser },
+    props: { campaign, answersPerUser, views },
   };
 };
