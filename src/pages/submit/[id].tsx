@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import mock_location from "./mock_location.png";
 import { Button } from "@tremor/react";
-import Banner from "../../../components/Banner";
+import Banner from "../../components/Banner";
 import { Sono } from "next/font/google";
 import Link from "next/link";
 
