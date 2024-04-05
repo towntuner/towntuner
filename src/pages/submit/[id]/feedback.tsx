@@ -22,7 +22,8 @@ export const getServerSideProps = (async () => {
     questions: [
       {
         question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
-        type: "multiple choice",
+        type: "single-select",
+        options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
       },
       {
         question:
@@ -38,23 +39,27 @@ export const getServerSideProps = (async () => {
 export default function SubmissionPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log("hello from SubmissionPage");
+  const question_count = survey.questions.length;
+  const question_number = 0; //hier muss man dann die Fragen nummer dynmaisch berechnen
   const router = useRouter();
   return (
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="">{survey.description}</p>
-        <div className="flex justify-center">
-          <Link href={`/submit/${router.query.id}/feedback`}>
-            <Button
-              icon={RiArrowRightLine}
-              iconPosition="right"
-              variant="light"
-            >
-              Feedback geben
-            </Button>
-          </Link>
+        <p className=" grid justify-items-center my-10 mx-20 border-4 p-5 border-sky-600 rounded-lg bg-sky-50">
+          {survey.description}
+        </p>
+        <div className="grid justify-items-center m-10">
+          {survey.questions[question_number].question}
+          <div>
+            {survey.questions[question_number].options?.map((option) => (
+              <form>
+                <Button type="submit" key={option.value} className="m-5">
+                  {option.value}
+                </Button>
+              </form>
+            ))}
+          </div>
         </div>
       </div>
     </main>
