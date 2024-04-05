@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
+import AreaPreview from "@/components/areaPreview";
 
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
@@ -30,12 +31,7 @@ export default function SubmissionPage({
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
         <p className="text-xl m-5">Sind Sie häufig in {campaign.location}?</p>
-        <Image
-          src={mock_location}
-          height={300}
-          alt="location mock"
-          className="m-5"
-        />
+        <AreaPreview latitude={52.39170852631827} longitude={13.126965482312585}/>
         <div className="content-center space-x-10">
           <Link href={`/submit/${router.query.id}/summary`}>
             <Button variant="primary" color="green">

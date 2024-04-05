@@ -127,17 +127,17 @@ export default function SubmissionPage({
   );
 
   return (
-    <main className="font-merri">
+    <main className="font-merri  text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className=" grid justify-items-center my-10 px-20 py-20 bg-sky-50 text-s font-thin">
+        <p className=" grid justify-items-center my-10 px-20 py-20 bg-[#f8aa4b]  text-s font-thin">
           {campaign.description}
         </p>
         <div className="grid justify-items-center m-10 text-xl font-extrabold">
           {campaign.questions[question_number].question}
           <div className="flex space-x-4">
             {campaign.questions[question_number].options?.map((option) => (
-              <form key={option.value}>
+              <form key={option.value} className = "content-evenly ">
                 <input
                   name="response"
                   value={option.value}
