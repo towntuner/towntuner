@@ -15,7 +15,7 @@ export default function EmojiButton({
 }: EmojiButtonProps) {
   return (
     <Menu as="div" className="relative">
-      <Menu.Button className="z-10 relative">{children}</Menu.Button>
+      <Menu.Button className="relative">{children}</Menu.Button>
       <Transition
         as={Fragment}
         enter="transition ease-out duration-100"
