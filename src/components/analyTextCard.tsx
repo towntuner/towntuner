@@ -18,11 +18,11 @@ export default function AnalyticalTextCard({
         {question}
       </p>
 
-      <div className="grid grid-cols-3 gap-4 auto-rows-max">
+      <div className="grid grid-cols-3 gap-4">
         {Object.entries(answers).map(([answer, count]) => {
           return (
-            <Card className="group">
-              <div className="flex items-center space-x-4">
+            <Card className="group w-full" style={{ padding: "12px" }}>
+              <div className="flex items-center">
                 <p className=" text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content-strong">
                   {answer}
                 </p>
