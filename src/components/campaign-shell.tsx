@@ -2,6 +2,14 @@ import { ReactNode } from "react";
 import Header from "./header";
 import Image from "next/image";
 import { Campaign } from "@/types/campaign";
+import { RawInput } from "./raw-input";
+import EmojiButton from "./emoji-button";
+import { Tab, TabGroup, TabList } from "@tremor/react";
+import {
+  ChartBarIcon,
+  Cog6ToothIcon,
+  WrenchIcon,
+} from "@heroicons/react/16/solid";
 
 interface CampaignShellProps {
   children: ReactNode;
@@ -25,6 +33,17 @@ export default function CampaignShell({
             sizes="100vw"
             className="h-52 w-full object-cover object-center"
           />
+        </div>
+      </div>
+      <div className="flex flex-col w-full max-w-4xl mx-auto">
+        <div className="flex flex-col items-start gap-3">
+          <EmojiButton>
+            <div className="rounded-2xl bg-white -mt-10 z-10 text-5xl p-3 border-gray-300 border">
+              {campaign.icon ?? "💬"}
+            </div>
+          </EmojiButton>
+          <RawInput placeholder="Add a title" defaultValue={campaign.title} />
+          {children}
         </div>
       </div>
     </div>

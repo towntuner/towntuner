@@ -36,7 +36,7 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
-function projectSummary(survey: Survey) {
+export function ProjectSummary(props: {survey: Survey}) {
   return (
     <div className="grid justify-items-center">
       <Image
@@ -45,7 +45,7 @@ function projectSummary(survey: Survey) {
         alt="project image"
         className="m-5"
       />
-      <p className="mx-40">{survey.description}</p>
+      <p className="mx-40">{props.survey.description}</p>
     </div>
   );
 }
@@ -59,7 +59,7 @@ export default function ProjectSummaryPage({
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        {projectSummary(survey)}
+        <ProjectSummary survey={survey} />
         <div className="flex justify-center">
           <Link href={`/submit/${router.query.id}/feedback`}>
             <Button
