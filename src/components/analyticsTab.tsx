@@ -71,8 +71,8 @@ export default function AnalyticsTab({
   if (answersPerUser && questions) {
     answersPerUser.forEach((answers: string[]) => {
       answers.forEach((answer: string, index: number) => {
-        const question = questions[index].question;
-        const type = questions[index].type;
+        const question = questions[index]?.question ?? "No question";
+        const type = questions[index]?.type ?? "text";
 
         if (!questionCounts[type]) {
           questionCounts[type] = {};
