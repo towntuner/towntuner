@@ -75,9 +75,6 @@ export default function App({
                 </span>
                 <div className="truncate">
                   <p className="truncate text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                    {
-                      // TODO: adjust link
-                    }
                     <a
                       href={"/app/" + campaign.key}
                       className="focus:outline-none"
