@@ -56,10 +56,15 @@ export default function CampaignHome({
     title !== campaign.title ||
     desc !== campaign.description ||
     questions.length !== (campaign.questions ?? []).length ||
-    questions.some(
-      (q, index) =>
-        campaign.questions.length > index && q !== campaign.questions[index]
-    );
+    questions.some((q, index) => {
+      console.log(q.question, "vs", campaign.questions[index].question);
+
+      return (
+        (campaign.questions.length > index &&
+          q !== campaign.questions[index]) ||
+        q.question !== campaign.questions[index].question
+      );
+    });
 
   function addSingleChoice() {
     setQuestions([
@@ -113,7 +118,7 @@ export default function CampaignHome({
           />
         </div>
       </div>
-      <div className="flex flex-col w-full max-w-4xl mx-auto">
+      <div className="flex flex-col w-full max-w-4xl mx-auto mb-20">
         <div className="flex flex-col items-start gap-3">
           <EmojiButton onEmojiSelect={setEmoji}>
             <div className="rounded-2xl bg-white -mt-10 z-10 text-5xl p-3 border-tremor-border border hover:bg-tremor-background-muted transition duration-100">
@@ -265,7 +270,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         ...prev,
         [current[1]]: {
           ...previous,
-          title: current.includes("title")
+          createdAt: current[1],
+          question: current.includes("title")
             ? curr[1]?.toString() ?? ""
             : previous.question,
           options: current.includes("option")
@@ -281,6 +287,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         },
       };
     }, {} as Record<string, Question>);
+
+  console.log({ soenke: Object.values(questions) });
 
   const updatedCampaign = {
     ...campaign,

@@ -4,6 +4,8 @@ import { TextInput } from "@tremor/react";
 import { clsx } from "clsx";
 import { useState } from "react";
 
+import { useDebouncedCallback } from "use-debounce";
+
 interface QuestionProps {
   className?: string;
   question: Question;
@@ -18,6 +20,8 @@ export default function QuestionBlock({
   onChange,
   index,
 }: QuestionProps) {
+  console.log({ question });
+
   const [options, setOptions] = useState(
     question.type === "single-select" ? question.options ?? [] : []
   );
@@ -35,6 +39,15 @@ export default function QuestionBlock({
     onChange({ ...question, type: "single-select", options: updated });
   }
 
+  const debounced = useDebouncedCallback(
+    // function
+    (value) => {
+      console.log(value);
+      onChange({ ...question, question: value });
+    },
+    700
+  );
+
   return (
     <div
       className={clsx(
@@ -51,6 +64,7 @@ export default function QuestionBlock({
           question.type === "single-select" &&
             "rounded-b-none border-l-0 border-r-0 border-t-0 !border-b-tremor-border"
         )}
+        onValueChange={(value) => debounced(value)}
       />
       {options.map((option, index) => (
         <TextInput

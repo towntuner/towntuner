@@ -1,3 +1,4 @@
+import { Campaign } from "@/types/campaign";
 import { getStore } from "@netlify/blobs";
 import { nanoid } from "nanoid";
 import { GetServerSideProps, GetServerSidePropsResult } from "next";
@@ -14,7 +15,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     description: "",
     icon: "💬",
     questions: [],
-  });
+    deadline: new Date().toISOString(),
+    location: "",
+  } satisfies Campaign);
 
   return {
     redirect: {

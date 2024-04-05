@@ -13,7 +13,6 @@ export default function AnalyticalMCCard({
     name: name,
     [question]: questions,
   }));
-  console.log(chartdata);
 
   return (
     <div>
@@ -25,7 +24,6 @@ export default function AnalyticalMCCard({
           colors={["blue"]}
           valueFormatter={dataFormatter}
           yAxisWidth={48}
-          onValueChange={(v) => console.log(v)}
         />
       </Card>
     </div>
