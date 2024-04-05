@@ -2,14 +2,15 @@ import Header from "@/components/header";
 import { RiArrowRightUpLine } from "@remixicon/react";
 import { Card, Divider } from "@tremor/react";
 import { getStore } from "@netlify/blobs";
-import { useEffect } from "react";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { Campaign } from "@/types/campaign";
+import { generatePalette } from "emoji-palette";
+import { useEffect } from "react";
 
-interface CampaignProps {
-  title: string;
-  icons: string;
+interface CampaignCardProps {
+  campaign: Campaign;
+  key: string;
   color: string;
-  href: string;
 }
 
 function classNames(...classes: any[]) {
@@ -19,26 +20,41 @@ function classNames(...classes: any[]) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const campaignsStore = getStore("campaigns");
   const { blobs } = await campaignsStore.list();
-  let campaigns: any = [];
+  let campaigns: CampaignCardProps[] = [];
   await Promise.all(
     blobs.map(async (blob) => {
-      campaigns.push(await campaignsStore.get(blob.key, { type: "json" }));
+      let campaignCard: CampaignCardProps = {} as CampaignCardProps;
+      campaignCard.campaign = await campaignsStore.get(blob.key, {
+        type: "json",
+      });
+      campaignCard.key = blob.key;
+      console.log(campaignCard);
+      campaigns.push(campaignCard);
     })
   );
   console.log(campaigns);
-  return { props: { campaigns: blobs } };
+  return { props: { campaigns } };
 };
 
 export default function App({
   campaigns,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  useEffect(() => {
+    campaigns.forEach((campaign: CampaignCardProps) => {
+      campaign.color = generatePalette(campaign.campaign.icon)[
+        Math.floor(generatePalette(campaign.campaign.icon).length / 2)
+      ];
+      console.log(campaign.color);
+    });
+  }, []);
+
   return (
     <>
       <Header />
       <div className="m-4">
         <div className="flex items-center space-x-2">
           <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-            Projects
+            Campaigns
           </h3>
           <span className="inline-flex h-6 w-6 items-center justify-center rounded-tremor-full bg-tremor-background-subtle text-tremor-label font-medium text-tremor-content-strong dark:bg-dark-tremor-background-subtle dark:text-dark-tremor-content-strong">
             {campaigns.length}
@@ -46,24 +62,29 @@ export default function App({
         </div>
         <Divider className="my-4" />
         <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {campaigns.map((campaign: any) => (
-            <Card key={campaign.title} className="group">
+          {campaigns.map((campaign: CampaignCardProps) => (
+            <Card key={campaign.campaign.title} className="group">
               <div className="flex items-center space-x-4">
                 <span
                   className={classNames(
-                    campaign.color,
                     "flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-tremor-default font-medium"
                   )}
                   aria-hidden={true}
+                  style={{ backgroundColor: campaign.color }}
                 >
-                  {campaign.icons}
+                  {campaign.campaign.icon}
                 </span>
                 <div className="truncate">
                   <p className="truncate text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                    <a href={campaign.href} className="focus:outline-none">
-                      {/* Extend link to entire card */}
+                    {
+                      // TODO: adjust link
+                    }
+                    <a
+                      href={"/app/" + campaign.key}
+                      className="focus:outline-none"
+                    >
                       <span className="absolute inset-0" aria-hidden={true} />
-                      {campaign.title}
+                      {campaign.campaign.title}
                     </a>
                   </p>
                 </div>

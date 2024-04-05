@@ -15,6 +15,7 @@
     "@netlify/blobs": "^7.3.0",
     "@remixicon/react": "^4.2.0",
     "@tremor/react": "^3.15.0",
+    "emoji-palette": "^0.0.3",
     "nanoid": "^5.0.6",
     "netlify-cli": "^17.21.2",
     "next": "14.1.4",
