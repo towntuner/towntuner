@@ -4,6 +4,12 @@ import Image from "next/image";
 import { Campaign } from "@/types/campaign";
 import { RawInput } from "./raw-input";
 import EmojiButton from "./emoji-button";
+import { Tab, TabGroup, TabList } from "@tremor/react";
+import {
+  ChartBarIcon,
+  Cog6ToothIcon,
+  WrenchIcon,
+} from "@heroicons/react/16/solid";
 
 interface CampaignShellProps {
   children: ReactNode;
@@ -37,6 +43,7 @@ export default function CampaignShell({
             </div>
           </EmojiButton>
           <RawInput placeholder="Add a title" defaultValue={campaign.title} />
+          {children}
         </div>
       </div>
     </div>
