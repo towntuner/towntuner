@@ -30,9 +30,14 @@ import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
+  answersPerUser: string[][];
 }
 
-export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
+export default function CampaignHome({
+  campaign,
+  answersPerUser,
+  ...rest
+}: CampaignHomeProps) {
   const [emoji, setEmoji] = useState(campaign.icon);
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
@@ -140,7 +145,10 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
                 </div>
               </TabPanel>
               <TabPanel>
-                <AnalyticsTab />
+                <AnalyticsTab
+                  answersPerUser={answersPerUser}
+                  questions={campaign.questions}
+                />
               </TabPanel>
               <TabPanel>
                 <SettingsTab />
@@ -195,12 +203,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 
   const responseStore = getResponseStore(campaignId);
-
-  const answersPerUser: string[][] = [
-    ["Yes", "No", "Yes"],
-    ["Yes", "Yes", "No"],
-    ["Yes", "Maybe", "Yes"],
-  ];
+  const answersPerUser: string[][] = [];
 
   for await (const submissions of responseStore.list({ paginate: true })) {
     for (const submission of submissions.blobs) {
@@ -209,20 +212,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     }
   }
 
-  const questionCounts: QuestionCounts = {};
-
-  answersPerUser.forEach((answers: string[]) => {
-    answers.forEach((answer: string, index: number) => {
-      const question = `Question ${index + 1}`;
-      if (!questionCounts[question]) {
-        questionCounts[question] = {};
-      }
-      questionCounts[question][answer] =
-        (questionCounts[question][answer] || 0) + 1;
-    });
-  });
-
-  console.log(questionCounts);
+  console.log("index.tsx", answersPerUser);
 
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);
@@ -236,6 +226,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 
   return {
-    props: { campaign },
+    props: { campaign, answersPerUser },
   };
 };
