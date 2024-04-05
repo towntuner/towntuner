@@ -6,6 +6,7 @@ import Banner from "../../../components/Banner";
 import { Sono } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { getSurvey } from "./feedback";
 
 export interface Survey {
   title: string;
@@ -15,31 +16,21 @@ export interface Survey {
   deadline: string;
   questions: {
     question: string;
-    type: "multiple choice" | "text";
+    type: "single-select" | "text";
+    options?: { value: string }[];
   }[];
 }
 
-export const getServerSideProps = (async () => {
-  // Fetch data from external API
-  const survey: Survey = {
-    title: "Fahrradweg auf der Stahnsdorfer Straße",
-    description:
-      "Wir freuen uns, Ihnen mitteilen zu können, dass ein neuer Fahrradweg entlang der Stahnsdorfer Straße geplant ist, um die Mobilität und Sicherheit für alle Verkehrsteilnehmer zu verbessern. Dieses Projekt zielt darauf ab, den Radverkehr zu fördern und die Lebensqualität der Anwohner zu erhöhen. Der Fahrradweg wird eine sichere Route für Radfahrer bieten, die die Stahnsdorfer Straße nutzen möchten, sei es für den täglichen Pendelverkehr, den Schulweg oder Freizeitaktivitäten. Durch die Schaffung eines separaten Radwegs wird die Sicherheit für Radfahrer und Fußgänger erhöht, indem Konflikte mit dem motorisierten Verkehr reduziert werden. Das Projekt umfasst die Gestaltung eines breiten, gut beleuchteten und gut markierten Fahrradwegs, der den aktuellen Standards entspricht. Es wird auch Grünflächen und Bäume entlang des Weges integrieren, um eine angenehme Umgebung zu schaffen. Wir laden alle Anwohner ein, sich über das Projekt zu informieren und ihre Rückmeldungen zu geben, um sicherzustellen, dass der Fahrradweg die Bedürfnisse der Gemeinschaft bestmöglich erfüllt. Wir freuen uns darauf, gemeinsam zu einer sichereren und nachhaltigeren Verkehrslösung beizutragen.",
-    location: "Potsdam Griebnitzsee",
-    deadline: "24.12.2024",
-    questions: [
-      {
-        question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
-        type: "multiple choice",
-      },
-      {
-        question:
-          "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
-        type: "text",
-      },
-    ],
-  };
-  // Pass data to the page via props
+export const getServerSideProps = (async (context) => {
+  const surveyId = context.params!.id as string;
+
+  const survey = await getSurvey(surveyId);
+  if (!survey) {
+    return {
+      notFound: true,
+    };
+  }
+
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
