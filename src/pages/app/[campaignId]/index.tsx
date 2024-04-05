@@ -14,6 +14,7 @@ import {
   WrenchIcon,
 } from "@heroicons/react/16/solid";
 import { getStore } from "@netlify/blobs";
+import { RiExternalLinkFill } from "@remixicon/react";
 import {
   Button,
   Tab,
@@ -26,6 +27,8 @@ import {
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
@@ -38,6 +41,7 @@ export default function CampaignHome({
   answersPerUser,
   ...rest
 }: CampaignHomeProps) {
+  const router = useRouter();
   const [emoji, setEmoji] = useState(campaign.icon);
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
@@ -103,6 +107,18 @@ export default function CampaignHome({
             onValueChange={setDesc}
           />
         </div>
+
+        <Link href={`/submit/${router.query.campaignId}`}>
+          <Button
+            icon={RiExternalLinkFill}
+            className="mt-12"
+            iconPosition="right"
+            variant="light"
+          >
+            Open Survey
+          </Button>
+        </Link>
+
         <div className="mt-12 mb-8">
           <TabGroup>
             <TabList variant="line" defaultValue="1">
