@@ -1,5 +1,4 @@
 import Banner from "@/components/Banner";
-import { TextInput } from "@tremor/react";
 
 export default function end() {
   return (

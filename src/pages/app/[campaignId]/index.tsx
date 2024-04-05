@@ -3,6 +3,7 @@ import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
+import SortablePackages from "@/components/sortable-questions";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
@@ -22,8 +23,7 @@ import {
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -34,8 +34,6 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
 
-  const router = useRouter();
-
   const canSave = useMemo(() => {
     if (emoji !== campaign.icon) return true;
     if (title !== campaign.title) return true;
@@ -43,23 +41,6 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
 
     return false;
   }, [emoji, title, desc]);
-
-  async function handleSave() {
-    if (!canSave) return;
-
-    const url = new URL(router.pathname);
-    url.searchParams.set("save", "true");
-
-    url.searchParams.set("emoji", emoji);
-    url.searchParams.set("title", title);
-    url.searchParams.set("desc", desc);
-
-    await fetch(url.toString(), {
-      method: "POST",
-    });
-
-    router.reload();
-  }
 
   return (
     <form className="flex flex-col">
@@ -83,19 +64,24 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
               {emoji}
             </div>
           </EmojiButton>
+          <input name="emoji" className="hidden" value={emoji} readOnly />
           <RawInput
+            name="title"
             placeholder="Add a title"
             defaultValue={campaign.title}
             onChange={(elem) => setTitle(elem.target.value)}
+            value={title}
           />
           <Textarea
+            name="desc"
             placeholder="Add a description..."
             className="font-sans !text-lg"
             defaultValue={campaign.description}
+            value={desc}
             onValueChange={setDesc}
           />
         </div>
-        <div className="mt-12">
+        <div className="mt-12 mb-8">
           <TabGroup>
             <TabList variant="line" defaultValue="1">
               <Tab icon={WrenchIcon} value="1">
@@ -110,11 +96,10 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <p className="mt-4 leading-6 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                  diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                  aliquyam erat.
-                </p>
+                <SortablePackages
+                  questions={campaign.questions}
+                  id="sortable-questions"
+                />
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab />
@@ -133,14 +118,18 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
         )}
       >
         <div className="max-w-4xl flex justify-end items-start mx-auto w-full">
-          <Button onClick={handleSave}>Publish</Button>
+          <Button type="submit">Publish</Button>
         </div>
       </div>
     </form>
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+  query,
+}) => {
   if (!params || typeof params["campaignId"] !== "string") {
     return {
       notFound: true,
@@ -155,6 +144,26 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (!campaign) {
     return {
       notFound: true,
+    };
+  }
+
+  const { title, desc, emoji } = query;
+
+  const updatedCampaign = {
+    ...campaign,
+    title: title ?? campaign.title,
+    description: desc ?? campaign.description,
+    icon: emoji ?? campaign.icon,
+  };
+
+  if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
+    await store.setJSON(campaignId, updatedCampaign);
+
+    return {
+      redirect: {
+        destination: `/app/${campaignId}`,
+        permanent: false,
+      },
     };
   }
 

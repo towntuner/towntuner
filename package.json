@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dnd-kit/modifiers": "^7.0.0",
+    "@dnd-kit/sortable": "^8.0.0",
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
     "@headlessui/react": "^1.7.18",
@@ -17,8 +19,15 @@
     "@netlify/blobs": "^7.3.0",
     "@remixicon/react": "^4.2.0",
     "@tremor/react": "^3.15.0",
-    "emoji-palette": "^0.0.3",
+    "@types/mapbox-gl": "^3.1.0",
+    "leaflet": "^1.9.4",
+    "mapbox-gl": "^3.2.0",
+    "maplibre-gl": "^4.1.2",
+    "react-leaflet": "^4.2.1",
+    "react-map-gl": "^7.1.7",
+    "@vercel/og": "^0.6.2",
     "emoji-mart": "^5.5.2",
+    "emoji-palette": "^0.0.3",
     "nanoid": "^5.0.6",
     "netlify-cli": "^17.21.2",
     "next": "14.1.4",
@@ -29,6 +38,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@types/leaflet": "^1.9.9",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

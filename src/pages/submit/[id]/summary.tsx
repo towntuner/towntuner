@@ -8,35 +8,23 @@ import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
 import Banner from "../../../components/Banner";
-import { Survey } from "./index";
+import { getCampaign } from "./feedback";
+import { Campaign } from "@/types/campaign";
 
-export const getServerSideProps = (async () => {
-  // Fetch data from external API
-  console.log("hello from getServerSideProps");
-  const survey: Survey = {
-    title: "Fahrradweg auf der Stahnsdorfer Straße",
-    description:
-      "Wir freuen uns, Ihnen mitteilen zu können, dass ein neuer Fahrradweg entlang der Stahnsdorfer Straße geplant ist, um die Mobilität und Sicherheit für alle Verkehrsteilnehmer zu verbessern. Dieses Projekt zielt darauf ab, den Radverkehr zu fördern und die Lebensqualität der Anwohner zu erhöhen. Der Fahrradweg wird eine sichere Route für Radfahrer bieten, die die Stahnsdorfer Straße nutzen möchten, sei es für den täglichen Pendelverkehr, den Schulweg oder Freizeitaktivitäten. Durch die Schaffung eines separaten Radwegs wird die Sicherheit für Radfahrer und Fußgänger erhöht, indem Konflikte mit dem motorisierten Verkehr reduziert werden. Das Projekt umfasst die Gestaltung eines breiten, gut beleuchteten und gut markierten Fahrradwegs, der den aktuellen Standards entspricht. Es wird auch Grünflächen und Bäume entlang des Weges integrieren, um eine angenehme Umgebung zu schaffen. Wir laden alle Anwohner ein, sich über das Projekt zu informieren und ihre Rückmeldungen zu geben, um sicherzustellen, dass der Fahrradweg die Bedürfnisse der Gemeinschaft bestmöglich erfüllt. Wir freuen uns darauf, gemeinsam zu einer sichereren und nachhaltigeren Verkehrslösung beizutragen.",
-    location: "Potsdam Griebnitzsee",
-    deadline: "24.12.2024",
-    questions: [
-      {
-        question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
-        type: "single-select",
-        options: [{ value: "Ja" }, { value: "Nein" }],
-      },
-      {
-        question:
-          "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
-        type: "text",
-      },
-    ],
-  };
-  // Pass data to the page via props
-  return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Survey }>;
+export const getServerSideProps = (async (context) => {
+  const campaignId = context.params!.id as string;
 
-export function ProjectSummary(props: {survey: Survey}) {
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return { props: { campaign } };
+}) satisfies GetServerSideProps<{ campaign: Campaign }>;
+
+export function ProjectSummary(props: { campaign: Campaign }) {
   return (
     <div className="grid justify-items-center">
       <Image
@@ -45,21 +33,21 @@ export function ProjectSummary(props: {survey: Survey}) {
         alt="project image"
         className="m-5"
       />
-      <p className="mx-40">{props.survey.description}</p>
+      <p className="mx-40">{props.campaign.description}</p>
     </div>
   );
 }
 
 export default function ProjectSummaryPage({
-  survey,
+  campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("hello from SubmissionPage");
   const router = useRouter();
   return (
     <main>
-      <Banner title={survey.title}></Banner>
+      <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <ProjectSummary survey={survey} />
+        <ProjectSummary campaign={campaign} />
         <div className="flex justify-center">
           <Link href={`/submit/${router.query.id}/feedback`}>
             <Button
