@@ -13,6 +13,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     title: "New Campaign",
     description: "",
     icon: "💬",
+    questions: [],
   });
 
   return {

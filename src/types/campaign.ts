@@ -1,3 +1,5 @@
+import { Question } from "./questions";
+
 export interface Campaign {
   createdAt: string;
   title: string;
@@ -6,9 +8,5 @@ export interface Campaign {
   location: string;
   image?: Blob;
   deadline: string;
-  questions: {
-    question: string;
-    type: "single-select" | "text";
-    options?: { value: string }[];
-  }[];
+  questions: Question[];
 }

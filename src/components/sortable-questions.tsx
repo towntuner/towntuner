@@ -94,7 +94,7 @@ export default function SortablePackages({
     setActivePackage(undefined);
   }
 
-  if (questions.length === 0) return null;
+  if ((questions ?? []).length === 0) return null;
 
   return (
     <div className="flex flex-col gap-y-4">
