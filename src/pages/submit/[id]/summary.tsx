@@ -8,8 +8,10 @@ import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
 import Banner from "../../../components/Banner";
+import Description from "@/components/Description";
 import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
+
 
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
@@ -33,7 +35,7 @@ export function ProjectSummary(props: { campaign: Campaign }) {
         alt="project image"
         className="m-5"
       />
-      <p className="mx-40 bg-[#eff9ff]">{props.campaign.description}</p>
+      <Description text={props.campaign.description}></Description>
     </div>
   );
 }
