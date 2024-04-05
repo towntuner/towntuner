@@ -2,11 +2,12 @@ import { getResponseStore } from "@/blobs";
 import AnalyticsTab from "@/components/analyticsTab";
 import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
+import QuestionBlock from "@/components/question";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
 import { SocialsTab } from "@/components/socialsTab";
-import SortablePackages from "@/components/sortable-questions";
 import { Campaign } from "@/types/campaign";
+import { Question } from "@/types/questions";
 import {
   ChartBarIcon,
   Cog6ToothIcon,
@@ -34,11 +35,13 @@ import { useMemo, useState } from "react";
 interface CampaignHomeProps {
   campaign: Campaign;
   answersPerUser: string[][];
+  views: number;
 }
 
 export default function CampaignHome({
   campaign,
   answersPerUser,
+  views,
   ...rest
 }: CampaignHomeProps) {
   const router = useRouter();
@@ -48,24 +51,49 @@ export default function CampaignHome({
 
   const [questions, setQuestions] = useState(campaign.questions ?? []);
 
-  const canSave = useMemo(() => {
-    if (emoji !== campaign.icon) return true;
-    if (title !== campaign.title) return true;
-    if (desc !== campaign.description) return true;
-
-    return false;
-  }, [emoji, title, desc]);
+  const canSave =
+    emoji !== campaign.icon ||
+    title !== campaign.title ||
+    desc !== campaign.description ||
+    questions.length !== (campaign.questions ?? []).length ||
+    questions.some(
+      (q, index) =>
+        campaign.questions.length > index && q !== campaign.questions[index]
+    );
 
   function addSingleChoice() {
     setQuestions([
       ...questions,
       {
         type: "single-select",
-        title: "",
+        question: "",
         options: [],
         createdAt: new Date().toISOString(),
       },
     ]);
+  }
+
+  function addTextField() {
+    setQuestions([
+      ...questions,
+      {
+        type: "text",
+        question: "",
+        options: [],
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+  }
+
+  function handleQuestionChange(question: Question) {
+    const index = questions.findIndex(
+      (q) => q.createdAt === question.createdAt
+    );
+
+    const updatedQuestions = [...questions];
+    updatedQuestions[index] = question;
+
+    setQuestions(updatedQuestions);
   }
 
   const campaignId = router.query.campaignId as string;
@@ -139,10 +167,16 @@ export default function CampaignHome({
             </TabList>
             <TabPanels>
               <TabPanel className="mt-5">
-                <SortablePackages
-                  questions={questions ?? []}
-                  id="sortable-questions"
-                />
+                <div className="flex flex-col gap-2 mb-5">
+                  {questions.map((question, index) => (
+                    <QuestionBlock
+                      question={question}
+                      key={question.question}
+                      onChange={(data) => handleQuestionChange(data)}
+                      index={index}
+                    />
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <button
                     onClick={addSingleChoice}
@@ -155,6 +189,7 @@ export default function CampaignHome({
                     </span>
                   </button>
                   <button
+                    onClick={addTextField}
                     type="button"
                     className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none"
                   >
@@ -170,6 +205,7 @@ export default function CampaignHome({
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab
+                  views={views}
                   answersPerUser={answersPerUser}
                   questions={campaign.questions}
                 />
@@ -217,13 +253,44 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const { title, desc, emoji } = query;
+  const { title, desc, emoji, ...rest } = query;
+
+  const questions = Object.entries(rest)
+    .filter(([key]) => key.startsWith("question/"))
+    .reduce<Record<string, Question>>((prev, curr) => {
+      const current = curr[0].split("/");
+      const previous = prev[current[1] as any];
+
+      return {
+        ...prev,
+        [current[1]]: {
+          ...previous,
+          title: current.includes("title")
+            ? curr[1]?.toString() ?? ""
+            : previous.question,
+          options: current.includes("option")
+            ? [...(previous as any).options, { value: curr[1] }]
+            : previous
+            ? (previous as any).options
+            : [],
+          type: current.includes("option")
+            ? "single-select"
+            : previous
+            ? previous.type
+            : "text",
+        },
+      };
+    }, {} as Record<string, Question>);
 
   const updatedCampaign = {
     ...campaign,
     title: title ?? campaign.title,
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
+    questions:
+      Object.values(questions).length > 0
+        ? Object.values(questions)
+        : campaign.questions,
   };
 
   const responseStore = getResponseStore(campaignId);
@@ -236,10 +303,13 @@ export const getServerSideProps: GetServerSideProps = async ({
     }
   }
 
-  console.log("index.tsx", answersPerUser);
+  const viewsStore = await getStore("views");
+  const views = await viewsStore.get(campaignId, { type: "json" });
 
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);
+
+    console.log(JSON.stringify(updatedCampaign));
 
     return {
       redirect: {
@@ -250,6 +320,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
 
   return {
-    props: { campaign, answersPerUser },
+    props: { campaign, answersPerUser, views },
   };
 };
