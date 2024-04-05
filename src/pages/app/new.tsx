@@ -10,6 +10,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const campaignId = nanoid();
   await store.setJSON(campaignId, {
     createdAt: new Date().toISOString(),
+    title: "",
+    description: "",
+    icon: "💬",
   });
 
   return {
