@@ -44,7 +44,6 @@ export default function App({
       campaign.color = generatePalette(campaign.campaign.icon)[
         Math.floor(generatePalette(campaign.campaign.icon).length / 2)
       ];
-      console.log(campaign.color);
     });
   }, []);
 

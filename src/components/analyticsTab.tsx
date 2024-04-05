@@ -16,7 +16,7 @@ export default function AnalyticsTab({
 }: {
   answersPerUser: string[][];
   questions: Question[];
-  views: string;
+  views: number;
 }) {
   const [noAnswers, setNoAnswers] = useState(false);
   const questionCounts: QuestionCounts = {};
@@ -86,8 +86,6 @@ export default function AnalyticsTab({
       });
     });
   }
-
-  console.log(questionCounts);
 
   return (
     <div>
