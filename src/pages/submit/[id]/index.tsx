@@ -5,6 +5,7 @@ import { Button } from "@tremor/react";
 import Banner from "../../../components/Banner";
 import { Sono } from "next/font/google";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export interface Survey {
   title: string;
@@ -58,7 +59,7 @@ export default function SubmissionPage({
           className="m-5"
         />
         <div className="content-center space-x-10">
-          <Link href={`/submit/${router.query.id}/feedback`}>
+          <Link href={`/submit/${router.query.id}/summary`}>
             <Button variant="primary" color="green">
               Ja
             </Button>{" "}
