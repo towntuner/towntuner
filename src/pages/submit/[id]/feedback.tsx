@@ -49,7 +49,7 @@ export async function getSurvey(surveyId: string): Promise<Survey | undefined> {
     return;
   }
 
-  survey.location = "Potsdam Griebnitzsee"
+  survey.location = "Potsdam Griebnitzsee";
 
   // mock until question builder works
   survey.questions = [
@@ -71,6 +71,13 @@ export async function getSurvey(surveyId: string): Promise<Survey | undefined> {
 
 export const getServerSideProps = (async (context) => {
   const surveyId = context.params!.id as string;
+  const survey = await getSurvey(surveyId);
+  if (!survey) {
+    return {
+      notFound: true,
+    };
+  }
+
   const respondentId = getRespondentId(context);
 
   const response = context.query.response;
@@ -86,18 +93,15 @@ export const getServerSideProps = (async (context) => {
     });
 
     const nextQuestion = questionNumber + 1;
+    const isFinished = nextQuestion >= survey.questions.length;
+    const destination = isFinished
+      ? "/end"
+      : `/submit/${surveyId}/feedback?question=${nextQuestion}`;
     return {
       redirect: {
-        destination: `/submit/${surveyId}/feedback?question=${nextQuestion}`,
+        destination: destination,
         statusCode: 303,
       },
-    };
-  }
-
-  const survey = await getSurvey(surveyId);
-  if (!survey) {
-    return {
-      notFound: true,
     };
   }
 
@@ -111,11 +115,6 @@ export default function SubmissionPage({
   const question_number = Number.parseInt(
     (router.query.question as string) ?? "0"
   );
-
-  const isLastQuestion = question_number >= survey.questions.length;
-  if (isLastQuestion) {
-    return <h1>You're done, thank you.</h1>;
-  }
 
   return (
     <main>
