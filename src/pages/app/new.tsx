@@ -9,13 +9,12 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const campaignId = nanoid();
   await store.setJSON(campaignId, {
-    createdAt: new Date(),
+    createdAt: new Date().toISOString(),
   });
 
   return {
-    props: {},
     redirect: {
-      destination: "/app",
+      destination: `/app/${campaignId}`,
       statusCode: 307,
     },
   };
