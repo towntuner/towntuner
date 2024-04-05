@@ -9,12 +9,8 @@ import { Button } from "@tremor/react";
 
 import { Survey } from "../[id]";
 import Banner from "@/components/Banner";
-import { getStore } from "@netlify/blobs";
 import { nanoid } from "nanoid";
-
-function getResponseStore(surveyId: string) {
-  return getStore(`responses:${surveyId}`);
-}
+import { getResponseStore } from "@/blobs";
 
 async function updateResponse({
   surveyId,
