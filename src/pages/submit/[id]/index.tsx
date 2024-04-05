@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
 import AreaPreview from "@/components/areaPreview";
+import MyButton from "@/components/MyButton";
 
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
@@ -39,14 +40,13 @@ export default function SubmissionPage({
         </div>
         <div className="content-center space-x-10">
           <Link href={`/submit/${router.query.id}/summary`}>
-            <Button variant="primary" color="green">
-              Ja
-            </Button>{" "}
+            <MyButton text="Ja">
+            </MyButton>{" "}
           </Link>
           <Link href="/end">
-            <Button variant="primary" color="red">
-              Nein
-            </Button>
+            <MyButton text="Nein">
+    
+            </MyButton>
           </Link>
         </div>
       </div>

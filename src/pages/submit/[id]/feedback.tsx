@@ -134,7 +134,7 @@ export default function SubmissionPage({
     <main className="font-merri  text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className=" grid justify-items-center my-10 px-20 py-20 bg-[#f8aa4b]  text-s font-thin">
+        <p className=" grid justify-items-center my-10 px-20 py-20 bg-[#eff9ff]  text-s font-thin">
           {campaign.description}
         </p>
         <div className="grid justify-items-center m-10 text-xl font-extrabold">
