@@ -33,7 +33,7 @@ export function ProjectSummary(props: { campaign: Campaign }) {
         alt="project image"
         className="m-5"
       />
-      <p className="mx-40">{props.campaign.description}</p>
+      <p className="mx-40 bg-[#eff9ff]">{props.campaign.description}</p>
     </div>
   );
 }
@@ -54,6 +54,7 @@ export default function ProjectSummaryPage({
               icon={RiArrowRightLine}
               iconPosition="right"
               variant="light"
+              className="text-[#86a3b3]"
             >
               Feedback geben
             </Button>
