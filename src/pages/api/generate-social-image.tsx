@@ -4,15 +4,23 @@ export const config = {
   runtime: "edge",
 };
 
-export default async function handler() {
-  const title = "Sollte hier ein Fahrradweg hindurchführen?";
-  const imageData = await fetch(
-    "https://i.wfcdn.de/teaser/1920/67538.png"
-  ).then((res) => res.arrayBuffer());
+async function fetchImageAsCSSRule(url: string) {
+  const response = await fetch(url);
+  const base64 = Buffer.from(await response.arrayBuffer()).toString("base64");
+  const dataURL = `data:image/png;base64,${base64}`;
+  const cssRule = `url(${dataURL})`;
+  return cssRule;
+}
 
-  const imageBase64 = Buffer.from(imageData).toString("base64");
+export default async function handler(request: Request) {
+  const url = new URL(request.url);
+  const title =
+    url.searchParams.get("title") ??
+    "Sollte hier ein Fahrradweg hindurchführen?";
+  const image =
+    url.searchParams.get("image") ?? "https://i.wfcdn.de/teaser/1920/67538.png";
 
-  const image = (
+  const socialMediaPost = (
     <div
       style={{
         height: "100%",
@@ -21,7 +29,7 @@ export default async function handler() {
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "center",
-        backgroundImage: `url(data:image/png;base64,${imageBase64})`,
+        backgroundImage: await fetchImageAsCSSRule(image),
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         fontWeight: 600,
@@ -51,5 +59,5 @@ export default async function handler() {
     height: 1080,
   };
 
-  return new ImageResponse(image, targetResolution);
+  return new ImageResponse(socialMediaPost, targetResolution);
 }
