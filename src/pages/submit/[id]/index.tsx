@@ -5,31 +5,31 @@ import { Button } from "@tremor/react";
 import Banner from "../../../components/Banner";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getSurvey } from "./feedback";
+import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
 
 export const getServerSideProps = (async (context) => {
-  const surveyId = context.params!.id as string;
+  const campaignId = context.params!.id as string;
 
-  const survey = await getSurvey(surveyId);
-  if (!survey) {
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) {
     return {
       notFound: true,
     };
   }
 
-  return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Campaign }>;
+  return { props: { campaign } };
+}) satisfies GetServerSideProps<{ campaign: Campaign }>;
 
 export default function SubmissionPage({
-  survey,
+  campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   return (
     <main>
-      <Banner title={survey.title}></Banner>
+      <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Sind Sie häufig in {survey.location}?</p>
+        <p className="text-xl m-5">Sind Sie häufig in {campaign.location}?</p>
         <Image
           src={mock_location}
           height={300}

@@ -8,23 +8,23 @@ import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
 import Banner from "../../../components/Banner";
-import { getSurvey } from "./feedback";
+import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
 
 export const getServerSideProps = (async (context) => {
-  const surveyId = context.params!.id as string;
+  const campaignId = context.params!.id as string;
 
-  const survey = await getSurvey(surveyId);
-  if (!survey) {
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) {
     return {
       notFound: true,
     };
   }
 
-  return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Campaign }>;
+  return { props: { campaign } };
+}) satisfies GetServerSideProps<{ campaign: Campaign }>;
 
-export function ProjectSummary(props: { survey: Campaign }) {
+export function ProjectSummary(props: { campaign: Campaign }) {
   return (
     <div className="grid justify-items-center">
       <Image
@@ -33,21 +33,21 @@ export function ProjectSummary(props: { survey: Campaign }) {
         alt="project image"
         className="m-5"
       />
-      <p className="mx-40">{props.survey.description}</p>
+      <p className="mx-40">{props.campaign.description}</p>
     </div>
   );
 }
 
 export default function ProjectSummaryPage({
-  survey,
+  campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   console.log("hello from SubmissionPage");
   const router = useRouter();
   return (
     <main>
-      <Banner title={survey.title}></Banner>
+      <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <ProjectSummary survey={survey} />
+        <ProjectSummary campaign={campaign} />
         <div className="flex justify-center">
           <Link href={`/submit/${router.query.id}/feedback`}>
             <Button

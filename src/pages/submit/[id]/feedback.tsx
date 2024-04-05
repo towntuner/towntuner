@@ -14,17 +14,17 @@ import { getStore } from "@netlify/blobs";
 import { Campaign } from "@/types/campaign";
 
 async function updateResponse({
-  surveyId,
+  campaignId,
   respondentId,
   questionNumber,
   response,
 }: {
-  surveyId: string;
+  campaignId: string;
   respondentId: string;
   questionNumber: number;
   response: string;
 }) {
-  const store = getResponseStore(surveyId);
+  const store = getResponseStore(campaignId);
   const currentResponse =
     (await store.get(respondentId, { type: "json" })) ?? [];
   currentResponse[questionNumber] = response;
@@ -42,17 +42,17 @@ function getRespondentId(context: GetServerSidePropsContext) {
   return assignedId;
 }
 
-export async function getSurvey(surveyId: string): Promise<Campaign | undefined> {
+export async function getCampaign(campaignId: string): Promise<Campaign | undefined> {
   const store = getStore("campaigns");
-  const survey: Campaign = await store.get(surveyId, { type: "json" });
-  if (!survey) {
+  const campaign: Campaign = await store.get(campaignId, { type: "json" });
+  if (!campaign) {
     return;
   }
 
-  survey.location = "Potsdam Griebnitzsee";
+  campaign.location = "Potsdam Griebnitzsee";
 
   // mock until question builder works
-  survey.questions = [
+  campaign.questions = [
     {
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
       type: "single-select",
@@ -66,13 +66,13 @@ export async function getSurvey(surveyId: string): Promise<Campaign | undefined>
     },
   ];
 
-  return survey;
+  return campaign;
 }
 
 export const getServerSideProps = (async (context) => {
-  const surveyId = context.params!.id as string;
-  const survey = await getSurvey(surveyId);
-  if (!survey) {
+  const campaignId = context.params!.id as string;
+  const campaign = await getCampaign(campaignId);
+  if (!campaign) {
     return {
       notFound: true,
     };
@@ -86,17 +86,17 @@ export const getServerSideProps = (async (context) => {
   if (typeof response === "string") {
     const questionNumber = Number.parseInt(context.query.question as string);
     await updateResponse({
-      surveyId,
+      campaignId,
       respondentId,
       questionNumber,
       response,
     });
 
     const nextQuestion = questionNumber + 1;
-    const isFinished = nextQuestion >= survey.questions.length;
+    const isFinished = nextQuestion >= campaign.questions.length;
     const destination = isFinished
       ? "/end"
-      : `/submit/${surveyId}/feedback?question=${nextQuestion}`;
+      : `/submit/${campaignId}/feedback?question=${nextQuestion}`;
     return {
       redirect: {
         destination: destination,
@@ -105,11 +105,11 @@ export const getServerSideProps = (async (context) => {
     };
   }
 
-  return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Campaign }>;
+  return { props: { campaign } };
+}) satisfies GetServerSideProps<{ campaign: Campaign }>;
 
 export default function SubmissionPage({
-  survey,
+  campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const question_number = Number.parseInt(
@@ -118,15 +118,15 @@ export default function SubmissionPage({
 
   return (
     <main>
-      <Banner title={survey.title}></Banner>
+      <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
         <p className=" grid justify-items-center my-10 mx-20 border-4 p-5 border-sky-600 rounded-lg bg-sky-50">
-          {survey.description}
+          {campaign.description}
         </p>
         <div className="grid justify-items-center m-10">
-          {survey.questions[question_number].question}
+          {campaign.questions[question_number].question}
           <div>
-            {survey.questions[question_number].options?.map((option) => (
+            {campaign.questions[question_number].options?.map((option) => (
               <form key={option.value}>
                 <input
                   name="response"
