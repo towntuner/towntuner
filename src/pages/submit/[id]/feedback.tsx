@@ -1,23 +1,75 @@
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-import Link from "next/link";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from "next";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import mock_location from "./mock_location.png";
 
-import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
 import { Survey } from "../[id]";
 import Banner from "@/components/Banner";
+import { getStore } from "@netlify/blobs";
+import { nanoid } from "nanoid";
+
+function getResponseStore(surveyId: string) {
+  return getStore(`responses:${surveyId}`);
+}
+
+async function updateResponse({
+  surveyId,
+  respondentId,
+  questionNumber,
+  response,
+}: {
+  surveyId: string;
+  respondentId: string;
+  questionNumber: number;
+  response: string;
+}) {
+  const store = getResponseStore(surveyId);
+  const currentResponse =
+    (await store.get(respondentId, { type: "json" })) ?? [];
+  currentResponse[questionNumber] = response;
+  await store.setJSON(respondentId, currentResponse);
+}
+
+function getRespondentId(context: GetServerSidePropsContext) {
+  const existingCookie = context.req.cookies["townturner_id"];
+  if (existingCookie) {
+    return existingCookie;
+  }
+
+  const assignedId = nanoid();
+  context.res.setHeader("Set-Cookie", `townturner_id=${assignedId}`);
+  return assignedId;
+}
 
 export const getServerSideProps = (async (context) => {
+  const respondentId = getRespondentId(context);
+
+  const response = context.query.response;
+
   // Fetch data from external API
-  if (context.req.method === "POST") {
-    const response = context.query.response;
-    const question_number = context.query.question_number;
+  if (typeof response === "string") {
+    const surveyId = context.params!.id as string;
+    const questionNumber = Number.parseInt(context.query.question as string);
+    await updateResponse({
+      surveyId,
+      respondentId,
+      questionNumber,
+      response,
+    });
+
+    const nextQuestion = questionNumber + 1;
+    return {
+      redirect: {
+        destination: `/submit/${surveyId}/feedback?question=${nextQuestion}`,
+        statusCode: 303,
+      },
+    };
   }
-  console.log("Frage Nummer:" + context.query.question_number);
-  console.log("Antwort:" + context.query.response);
+
   const survey: Survey = {
     title: "Fahrradweg auf der Stahnsdorfer Straße",
     description:
@@ -33,7 +85,8 @@ export const getServerSideProps = (async (context) => {
       {
         question:
           "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
-        type: "text",
+        type: "single-select",
+        options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
       },
     ],
   };
@@ -44,9 +97,16 @@ export const getServerSideProps = (async (context) => {
 export default function SubmissionPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const question_count = survey.questions.length;
-  const question_number = 0; //hier muss man dann die Fragen nummer dynmaisch berechnen
   const router = useRouter();
+  const question_number = Number.parseInt(
+    (router.query.question as string) ?? "0"
+  );
+
+  const isLastQuestion = question_number >= survey.questions.length;
+  if (isLastQuestion) {
+    return <h1>You're done, thank you.</h1>;
+  }
+
   return (
     <main>
       <Banner title={survey.title}></Banner>
@@ -66,7 +126,7 @@ export default function SubmissionPage({
                   readOnly
                 ></input>
                 <input
-                  name="question_number"
+                  name="question"
                   value={question_number}
                   hidden
                   readOnly
