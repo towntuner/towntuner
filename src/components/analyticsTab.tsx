@@ -39,7 +39,7 @@ export default function AnalyticsTab({
     questions = [
       {
         type: "single-select",
-        title: "What is your favorite color?",
+        question: "What is your favorite color?",
         options: [
           { value: "Red" },
           { value: "Blue" },
@@ -50,7 +50,7 @@ export default function AnalyticsTab({
       },
       {
         type: "single-select",
-        title: "What is your favorite animal?",
+        question: "What is your favorite animal?",
         options: [
           { value: "Dog" },
           { value: "Cat" },
@@ -61,7 +61,8 @@ export default function AnalyticsTab({
       },
       {
         type: "text",
-        title: "Answer this with freetext?",
+        question: "Answer this with freetext?",
+        options: [],
         createdAt: new Date().toISOString(),
       },
     ];
@@ -70,7 +71,7 @@ export default function AnalyticsTab({
   if (answersPerUser && questions) {
     answersPerUser.forEach((answers: string[]) => {
       answers.forEach((answer: string, index: number) => {
-        const question = questions[index].title;
+        const question = questions[index].question;
         const type = questions[index].type;
 
         if (!questionCounts[type]) {
