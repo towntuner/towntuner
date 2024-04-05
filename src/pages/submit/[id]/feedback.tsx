@@ -7,11 +7,11 @@ import { useRouter } from "next/router";
 
 import { Button } from "@tremor/react";
 
-import { Survey } from "../[id]";
 import Banner from "@/components/Banner";
 import { nanoid } from "nanoid";
 import { getResponseStore } from "@/blobs";
 import { getStore } from "@netlify/blobs";
+import { Campaign } from "@/types/campaign";
 
 async function updateResponse({
   surveyId,
@@ -42,9 +42,9 @@ function getRespondentId(context: GetServerSidePropsContext) {
   return assignedId;
 }
 
-export async function getSurvey(surveyId: string): Promise<Survey | undefined> {
+export async function getSurvey(surveyId: string): Promise<Campaign | undefined> {
   const store = getStore("campaigns");
-  const survey: Survey = await store.get(surveyId, { type: "json" });
+  const survey: Campaign = await store.get(surveyId, { type: "json" });
   if (!survey) {
     return;
   }
@@ -106,7 +106,7 @@ export const getServerSideProps = (async (context) => {
   }
 
   return { props: { survey } };
-}) satisfies GetServerSideProps<{ survey: Survey }>;
+}) satisfies GetServerSideProps<{ survey: Campaign }>;
 
 export default function SubmissionPage({
   survey,

@@ -3,6 +3,7 @@ import EmojiButton from "@/components/emoji-button";
 import Header from "@/components/header";
 import { RawInput } from "@/components/raw-input";
 import SettingsTab from "@/components/settingsTab";
+import SortablePackages from "@/components/sortable-questions";
 import { Campaign } from "@/types/campaign";
 import {
   ChartBarIcon,
@@ -22,8 +23,7 @@ import {
 import clsx from "clsx";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -96,11 +96,10 @@ export default function CampaignHome({ campaign, ...rest }: CampaignHomeProps) {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <p className="mt-4 leading-6 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
-                  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                  diam nonumy eirmod tempor invidunt ut labore et dolore magna
-                  aliquyam erat.
-                </p>
+                <SortablePackages
+                  questions={campaign.questions}
+                  id="sortable-questions"
+                />
               </TabPanel>
               <TabPanel>
                 <AnalyticsTab />
@@ -156,8 +155,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
   };
-
-  console.log({ updatedCampaign, campaign });
 
   if (JSON.stringify(updatedCampaign) !== JSON.stringify(campaign)) {
     await store.setJSON(campaignId, updatedCampaign);
