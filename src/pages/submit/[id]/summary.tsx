@@ -7,7 +7,9 @@ import mock_project_image from "./mock_radweg_stahnsdorfer.jpg";
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
-import { Survey, Banner } from ".";
+import { Banner } from "../../../components/Banner";
+import { Survey } from "./index";
+
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
