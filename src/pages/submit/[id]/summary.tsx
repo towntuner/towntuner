@@ -7,7 +7,9 @@ import mock_project_image from "./mock_radweg_stahnsdorfer.jpg";
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
 
-import { Survey, Banner } from ".";
+import Banner from "../../../components/Banner";
+import { Survey } from "./index";
+
 
 export const getServerSideProps = (async () => {
   // Fetch data from external API
@@ -34,15 +36,18 @@ export const getServerSideProps = (async () => {
   return { props: { survey } };
 }) satisfies GetServerSideProps<{ survey: Survey }>;
 
-function projectSummary(survey: Survey) {
-    return <div className="grid justify-items-center">
-        <Image
-            src={mock_project_image}
-            height={300}
-            alt="project image"
-            className="m-5" />
-        <p className="mx-40">{survey.description}</p>
-    </div>;
+export function ProjectSummary(props: {survey: Survey}) {
+  return (
+    <div className="grid justify-items-center">
+      <Image
+        src={mock_project_image}
+        height={300}
+        alt="project image"
+        className="m-5"
+      />
+      <p className="mx-40">{props.survey.description}</p>
+    </div>
+  );
 }
 
 export default function ProjectSummaryPage({
@@ -54,7 +59,7 @@ export default function ProjectSummaryPage({
     <main>
       <Banner title={survey.title}></Banner>
       <div className="grid justify-items-center">
-        {projectSummary(survey)}
+        <ProjectSummary survey={survey} />
         <div className="flex justify-center">
           <Link href={`/submit/${router.query.id}/feedback`}>
             <Button
@@ -70,5 +75,3 @@ export default function ProjectSummaryPage({
     </main>
   );
 }
-
-

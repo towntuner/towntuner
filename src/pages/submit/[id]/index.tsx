@@ -2,9 +2,10 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Image from "next/image";
 import mock_location from "./mock_location.png";
 import { Button } from "@tremor/react";
-import Banner from "../../components/Banner";
+import Banner from "../../../components/Banner";
 import { Sono } from "next/font/google";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export interface Survey {
   title: string;
@@ -45,6 +46,7 @@ export const getServerSideProps = (async () => {
 export default function SubmissionPage({
   survey,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
   return (
     <main>
       <Banner title={survey.title}></Banner>
@@ -57,9 +59,11 @@ export default function SubmissionPage({
           className="m-5"
         />
         <div className="content-center space-x-10">
-          <Button variant="primary" color="green">
-            Ja
-          </Button>{" "}
+          <Link href={`/submit/${router.query.id}/summary`}>
+            <Button variant="primary" color="green">
+              Ja
+            </Button>{" "}
+          </Link>
           <Link href="/end">
             <Button variant="primary" color="red">
               Nein
