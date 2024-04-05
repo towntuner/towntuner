@@ -1,53 +1,27 @@
-import { getResponseStore } from "@/blobs";
-import { QuestionMC } from "@/types/questions";
-import { getStore } from "@netlify/blobs";
 import { BarChart } from "@tremor/react";
 import { Card } from "@tremor/react";
-import { Context } from "vm";
-
-const chartdata = [
-  {
-    name: "Amphibians",
-    "Number of threatened species": 2488,
-  },
-  {
-    name: "Birds",
-    "Number of threatened species": 1445,
-  },
-  {
-    name: "Crustaceans",
-    "Number of threatened species": 743,
-  },
-  {
-    name: "Ferns",
-    "Number of threatened species": 281,
-  },
-  {
-    name: "Arachnids",
-    "Number of threatened species": 251,
-  },
-  {
-    name: "Corals",
-    "Number of threatened species": 232,
-  },
-  {
-    name: "Algae",
-    "Number of threatened species": 98,
-  },
-];
+import { useEffect } from "react";
 
 export default function AnalyticalMCCard({
   question,
+  answers,
 }: {
-  question: QuestionMC;
+  question: string;
+  answers: Record<string, number>;
 }) {
+  const chartdata = Object.entries(answers).map(([name, questions]) => ({
+    name: name,
+    [question]: questions,
+  }));
+  console.log(chartdata);
+
   return (
     <div>
       <Card>
         <BarChart
           data={chartdata}
           index="name"
-          categories={["Number of threatened species"]}
+          categories={[question]}
           colors={["blue"]}
           valueFormatter={dataFormatter}
           yAxisWidth={48}
