@@ -10,9 +10,14 @@ import { Button } from "@tremor/react";
 import { Survey } from "../[id]";
 import Banner from "@/components/Banner";
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async (context) => {
   // Fetch data from external API
-  console.log("hello from getServerSideProps");
+  if (context.req.method === "POST") {
+    const response = context.query.response;
+    const question_number = context.query.question_number;
+  }
+  console.log("Frage Nummer:" + context.query.question_number);
+  console.log("Antwort:" + context.query.response);
   const survey: Survey = {
     title: "Fahrradweg auf der Stahnsdorfer Straße",
     description:
@@ -53,8 +58,20 @@ export default function SubmissionPage({
           {survey.questions[question_number].question}
           <div>
             {survey.questions[question_number].options?.map((option) => (
-              <form>
-                <Button type="submit" key={option.value} className="m-5">
+              <form key={option.value}>
+                <input
+                  name="response"
+                  value={option.value}
+                  hidden
+                  readOnly
+                ></input>
+                <input
+                  name="question_number"
+                  value={question_number}
+                  hidden
+                  readOnly
+                ></input>
+                <Button type="submit" className="m-5">
                   {option.value}
                 </Button>
               </form>
