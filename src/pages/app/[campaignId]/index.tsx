@@ -17,6 +17,10 @@ import {
 import { getStore } from "@netlify/blobs";
 import { RiExternalLinkFill, RiShare2Fill } from "@remixicon/react";
 import {
+  Accordion,
+  AccordionBody,
+  AccordionHeader,
+  AccordionList,
   Button,
   Tab,
   TabGroup,
@@ -31,6 +35,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useRef, useState } from "react";
+import MapPicker from "react-google-map-picker";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -179,6 +184,12 @@ export default function CampaignHome({
             value={desc}
             onValueChange={setDesc}
           />
+          <AccordionList className="w-full">
+            <Accordion className="w-full">
+              <AccordionHeader>Location</AccordionHeader>
+              <AccordionBody></AccordionBody>
+            </Accordion>
+          </AccordionList>
         </div>
 
         <Link href={`/submit/${campaignId}`}>
