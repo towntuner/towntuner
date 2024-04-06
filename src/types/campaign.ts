@@ -6,7 +6,7 @@ export interface Campaign {
   description: string;
   icon: string;
   location: string;
-  image?: Blob;
+  hasImage: boolean;
   deadline: string;
   questions: Question[];
 }

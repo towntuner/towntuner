@@ -22,6 +22,7 @@ import {
   AccordionHeader,
   AccordionList,
   Button,
+  DatePicker,
   Tab,
   TabGroup,
   TabList,
@@ -54,6 +55,7 @@ export default function CampaignHome({
   const [emoji, setEmoji] = useState(campaign.icon);
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
+  const [deadline, setDeadline] = useState(campaign.deadline);
 
   const [questions, setQuestions] = useState(campaign.questions ?? []);
 
@@ -70,7 +72,8 @@ export default function CampaignHome({
           q !== campaign.questions[index]) ||
         q.question !== campaign.questions[index].question
       );
-    });
+    }) ||
+    deadline !== campaign.deadline;
 
   function addSingleChoice() {
     setQuestions([
@@ -118,15 +121,12 @@ export default function CampaignHome({
     const formData = new FormData();
     formData.append("file", file);
 
-    await fetch(`/api/upload-campaign-image`, {
+    await fetch(`/api/${router.query.campaignId}/upload-campaign-image`, {
       method: "POST",
       body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     });
 
-    // router.reload();
+    router.reload();
   }
 
   const campaignId = router.query.campaignId as string;
@@ -157,16 +157,16 @@ export default function CampaignHome({
     <form className="flex flex-col">
       <Header backHref="/app" />
       <div className="flex flex-col items-stretch">
-        <div aria-hidden="true" className="relative h-52">
-          <Image
-            src={`https://images.unsplash.com/photo-1485381771061-e2cbd5317d9c?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-            alt=""
-            fill
-            quality={80}
-            sizes="100vw"
-            className="h-52 w-full object-cover object-center"
-          />
-        </div>
+        {campaign.hasImage ? (
+          <div aria-hidden="true" className="relative h-52">
+            <img
+              src={`/api/${campaignId}/load-campaign-image`}
+              className="h-52 w-full object-cover object-center"
+            />
+          </div>
+        ) : (
+          <div className="mt-20" />
+        )}
       </div>
       <div className="flex flex-col w-full max-w-4xl mx-auto mb-20">
         <div className="flex flex-col items-start gap-3">
@@ -180,16 +180,41 @@ export default function CampaignHome({
               type="file"
               className="hidden"
               ref={fileInputRef}
-              accept="image/*"
+              accept="image/png"
               onChange={handleUploadFile}
             />
-            <Button
-              className="-translate-y-1/2 relative"
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Upload image
-            </Button>
+            <div className="flex flex-row ml-auto -translate-y-1/2 gap-2 relative z-10">
+              <DatePicker
+                defaultValue={new Date(campaign.deadline)}
+                onValueChange={(val) => val && setDeadline(val.toISOString())}
+                enableClear={false}
+              />
+              <input
+                name="deadline"
+                className="hidden"
+                value={deadline}
+                readOnly
+              />
+              <Link href={`/submit/${campaignId}`} passHref target="_blank">
+                <Button
+                  className="relative bg-white hover:!bg-white shadow-tremor-input border-tremor-border"
+                  type="button"
+                  variant="secondary"
+                  icon={RiExternalLinkFill}
+                  color="gray"
+                  iconPosition="right"
+                >
+                  Open survey
+                </Button>
+              </Link>
+              <Button
+                className="relative"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Upload image
+              </Button>
+            </div>
           </div>
           <input name="emoji" className="hidden" value={emoji} readOnly />
           <RawInput
@@ -232,17 +257,6 @@ export default function CampaignHome({
             </Accordion>
           </AccordionList>
         </div>
-
-        <Link href={`/submit/${campaignId}`}>
-          <Button
-            icon={RiExternalLinkFill}
-            className="mt-12"
-            iconPosition="right"
-            variant="light"
-          >
-            Open Survey
-          </Button>
-        </Link>
 
         <div className="mt-12 mb-8">
           <TabGroup>
@@ -348,7 +362,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const { title, desc, emoji, ...rest } = query;
+  const { title, desc, emoji, deadline, ...rest } = query;
 
   const questions = Object.entries(rest)
     .filter(([key]) => key.startsWith("question/"))
@@ -378,13 +392,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     }, {} as Record<string, Question>);
 
-  console.log({ soenke: Object.values(questions) });
-
   const updatedCampaign = {
     ...campaign,
     title: title ?? campaign.title,
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
+    deadline: deadline ?? campaign.deadline,
     questions:
       Object.values(questions).length > 0
         ? Object.values(questions)

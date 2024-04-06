@@ -8,6 +8,9 @@ export default function CreateProject() {}
 export const getServerSideProps: GetServerSideProps = async () => {
   const store = getStore("campaigns");
 
+  const deadline = new Date();
+  deadline.setMonth(new Date().getMonth() + 1);
+
   const campaignId = nanoid();
   await store.setJSON(campaignId, {
     createdAt: new Date().toISOString(),
@@ -15,8 +18,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
     description: "",
     icon: "💬",
     questions: [],
-    deadline: new Date().toISOString(),
+    deadline: deadline.toISOString(),
     location: "",
+    hasImage: false,
   } satisfies Campaign);
 
   return {
