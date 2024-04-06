@@ -30,47 +30,7 @@ export default function AnalyticsTab({
     setNoAnswers(true);
   }
 
-  // TODO: Remove this
-  answersPerUser = [
-    ["Yes", "Yes", "Freitext"],
-    ["Yes", "Yes", "andere Freitext"],
-    ["No", "Yes", "Hier steht meine Meinung"],
-    ["Maybe", "No", "This is super useful"],
-    ["Maybe", "No", "Hallo :)"],
-  ];
-
   if (!questions) {
-    // TODO: Remove this -> show that you need to create Answers to see analytics
-    questions = [
-      {
-        type: "single-select",
-        question: "What is your favorite color?",
-        options: [
-          { value: "Red" },
-          { value: "Blue" },
-          { value: "Green" },
-          { value: "Yellow" },
-        ],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        type: "single-select",
-        question: "What is your favorite animal?",
-        options: [
-          { value: "Dog" },
-          { value: "Cat" },
-          { value: "Bird" },
-          { value: "Fish" },
-        ],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        type: "text",
-        question: "Answer this with freetext?",
-        options: [],
-        createdAt: new Date().toISOString(),
-      },
-    ];
   }
 
   if (answersPerUser && questions) {

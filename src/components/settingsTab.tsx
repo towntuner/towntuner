@@ -1,6 +1,10 @@
+import { getStore } from "@netlify/blobs";
 import { Button } from "@tremor/react";
+import { useRouter } from "next/router";
 
 export default function SettingsTab() {
+  const router = useRouter();
+
   return (
     <div>
       <h1 className="text-red-600 font-bold">Danger Zone</h1>
