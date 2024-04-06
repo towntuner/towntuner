@@ -22,6 +22,7 @@ import {
   AccordionHeader,
   AccordionList,
   Button,
+  DatePicker,
   Tab,
   TabGroup,
   TabList,
@@ -35,7 +36,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, useRef, useState } from "react";
-import MapPicker from "react-google-map-picker";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -53,6 +53,7 @@ export default function CampaignHome({
   const [emoji, setEmoji] = useState(campaign.icon);
   const [title, setTitle] = useState(campaign.title);
   const [desc, setDesc] = useState(campaign.description);
+  const [deadline, setDeadline] = useState(campaign.deadline);
 
   const [questions, setQuestions] = useState(campaign.questions ?? []);
 
@@ -69,7 +70,8 @@ export default function CampaignHome({
           q !== campaign.questions[index]) ||
         q.question !== campaign.questions[index].question
       );
-    });
+    }) ||
+    deadline !== campaign.deadline;
 
   function addSingleChoice() {
     setQuestions([
@@ -157,13 +159,26 @@ export default function CampaignHome({
               accept="image/png"
               onChange={handleUploadFile}
             />
-            <Button
-              className="-translate-y-1/2 relative"
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Upload image
-            </Button>
+            <div className="flex flex-row ml-auto -translate-y-1/2 gap-2 relative z-10">
+              <DatePicker
+                defaultValue={new Date(campaign.deadline)}
+                onValueChange={(val) => val && setDeadline(val.toISOString())}
+                enableClear={false}
+              />
+              <input
+                name="deadline"
+                className="hidden"
+                value={deadline}
+                readOnly
+              />
+              <Button
+                className="relative"
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                Upload image
+              </Button>
+            </div>
           </div>
           <input name="emoji" className="hidden" value={emoji} readOnly />
           <RawInput
@@ -304,7 +319,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const { title, desc, emoji, ...rest } = query;
+  const { title, desc, emoji, deadline, ...rest } = query;
 
   const questions = Object.entries(rest)
     .filter(([key]) => key.startsWith("question/"))
@@ -334,13 +349,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     }, {} as Record<string, Question>);
 
-  console.log({ soenke: Object.values(questions) });
-
   const updatedCampaign = {
     ...campaign,
     title: title ?? campaign.title,
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
+    deadline: deadline ?? campaign.deadline,
     questions:
       Object.values(questions).length > 0
         ? Object.values(questions)
