@@ -143,11 +143,6 @@ export default function CampaignHome({
 
   const campaignId = router.query.campaignId as string;
 
-  interface MarkerProps {
-    latitude: number;
-    longitude: number;
-  }
-
   const handleMapClick = (event: any) => {
     console.log(event.lngLat.lat, event.lngLat.lng);
 
