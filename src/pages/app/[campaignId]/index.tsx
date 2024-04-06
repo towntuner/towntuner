@@ -11,6 +11,7 @@ import { Question } from "@/types/questions";
 import {
   ChartBarIcon,
   Cog6ToothIcon,
+  MapPinIcon,
   PlusIcon,
   WrenchIcon,
 } from "@heroicons/react/16/solid";
@@ -35,7 +36,10 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useRef, useState } from "react";
+import React, { LegacyRef, useMemo, useRef, useState } from "react";
+import Map, { MapRef, Marker } from "react-map-gl";
+
+import "mapbox-gl/dist/mapbox-gl.css";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -57,7 +61,15 @@ export default function CampaignHome({
 
   const [questions, setQuestions] = useState(campaign.questions ?? []);
 
+  const [lat, setLat] = useState<number>(
+    Number(campaign.location?.split(",")?.[0])
+  );
+  const [lng, setLng] = useState<number>(
+    Number(campaign.location?.split(",")?.[1])
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mapRef = useRef<MapRef>(null);
 
   const canSave =
     emoji !== campaign.icon ||
@@ -71,7 +83,9 @@ export default function CampaignHome({
         q.question !== campaign.questions[index].question
       );
     }) ||
-    deadline !== campaign.deadline;
+    deadline !== campaign.deadline ||
+    lat !== Number(campaign.location?.split(",")?.[0]) ||
+    lng !== Number(campaign.location?.split(",")?.[1]);
 
   function addSingleChoice() {
     setQuestions([
@@ -129,6 +143,23 @@ export default function CampaignHome({
 
   const campaignId = router.query.campaignId as string;
 
+  interface MarkerProps {
+    latitude: number;
+    longitude: number;
+  }
+
+  const handleMapClick = (event: any) => {
+    console.log(event.lngLat.lat, event.lngLat.lng);
+
+    mapRef.current?.flyTo({
+      center: [event.lngLat.lng, event.lngLat.lat],
+      zoom: 14,
+    });
+
+    setLat(event.lngLat.lat);
+    setLng(event.lngLat.lng);
+  };
+
   return (
     <form className="flex flex-col">
       <Header backHref="/app" />
@@ -171,6 +202,18 @@ export default function CampaignHome({
                 value={deadline}
                 readOnly
               />
+              <Link href={`/submit/${campaignId}`} passHref target="_blank">
+                <Button
+                  className="relative bg-white hover:!bg-white shadow-tremor-input border-tremor-border"
+                  type="button"
+                  variant="secondary"
+                  icon={RiExternalLinkFill}
+                  color="gray"
+                  iconPosition="right"
+                >
+                  Open survey
+                </Button>
+              </Link>
               <Button
                 className="relative"
                 type="button"
@@ -199,21 +242,38 @@ export default function CampaignHome({
           <AccordionList className="w-full">
             <Accordion className="w-full">
               <AccordionHeader>Location</AccordionHeader>
-              <AccordionBody></AccordionBody>
+              <AccordionBody>
+                <Map
+                  mapStyle="mapbox://styles/mapbox/streets-v11"
+                  style={{
+                    width: "100%",
+                    height: "400px",
+                    position: "relative",
+                  }}
+                  initialViewState={{
+                    longitude: lng,
+                    latitude: lat,
+                    zoom: 13,
+                  }}
+                  onClick={handleMapClick}
+                  ref={mapRef}
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                >
+                  {lat && lng && (
+                    <Marker
+                      longitude={lng}
+                      latitude={lat}
+                      anchor="bottom"
+                      key="marker"
+                    >
+                      <MapPinIcon className="w-16 h-16" color="blue" />
+                    </Marker>
+                  )}
+                </Map>
+              </AccordionBody>
             </Accordion>
           </AccordionList>
         </div>
-
-        <Link href={`/submit/${campaignId}`}>
-          <Button
-            icon={RiExternalLinkFill}
-            className="mt-12"
-            iconPosition="right"
-            variant="light"
-          >
-            Open Survey
-          </Button>
-        </Link>
 
         <div className="mt-12 mb-8">
           <TabGroup>
@@ -231,6 +291,12 @@ export default function CampaignHome({
                 General
               </Tab>
             </TabList>
+            <input
+              name="location"
+              className="hidden"
+              value={`${lat},${lng}`}
+              readOnly
+            />
             <TabPanels>
               <TabPanel className="mt-5">
                 <div className="flex flex-col gap-2 mb-5">
@@ -319,7 +385,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  const { title, desc, emoji, deadline, ...rest } = query;
+  const { title, desc, emoji, deadline, location, ...rest } = query;
 
   const questions = Object.entries(rest)
     .filter(([key]) => key.startsWith("question/"))
@@ -355,6 +421,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     description: desc ?? campaign.description,
     icon: emoji ?? campaign.icon,
     deadline: deadline ?? campaign.deadline,
+    location: location ?? campaign.location,
     questions:
       Object.values(questions).length > 0
         ? Object.values(questions)

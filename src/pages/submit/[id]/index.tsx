@@ -21,6 +21,8 @@ export const getServerSideProps = (async (context) => {
     };
   }
 
+  console.log("CAMPAIGN", campaign);
+
   const viewsStore = await getStore("views");
   const views = await viewsStore.get(campaignId, { type: "json" });
   if (!views) {
@@ -35,19 +37,24 @@ export default function SubmissionPage({
   campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+
+  console.log("CAMPAIGN", campaign);
+
+  const lat = Number(campaign.location.split(",")[0]);
+  const lon = Number(campaign.location.split(",")[1]);
+
+  console.log("lat", lat, "lon", lon);
+
   return (
     <main>
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Are you often in {campaign.location}?</p>
+        <p className="text-xl m-5">Are you often here?</p>
         {/*
           TODO: Replace this with a real map
           */}
-        <AreaPreview
-          latitude={52.39170852631827}
-          longitude={13.126965482312585}
-        />
-        <div className="content-center m-5">
+        <AreaPreview latitude={lat} longitude={lon} />
+        <div className="content-center m-5 flex flex-col gap-5">
           <Link href={`/submit/${router.query.id}/summary`}>
             <MyButton text="Yes!"></MyButton>{" "}
           </Link>
