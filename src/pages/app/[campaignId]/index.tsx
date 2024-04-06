@@ -204,12 +204,13 @@ export default function CampaignHome({
           </AccordionList>
         </div>
 
-        <Link href={`/submit/${campaignId}`}>
+        <Link href={`/submit/${campaignId}`} passHref>
           <Button
             icon={RiExternalLinkFill}
             className="mt-12"
             iconPosition="right"
             variant="light"
+            type="button"
           >
             Open Survey
           </Button>
