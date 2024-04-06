@@ -30,7 +30,7 @@ export default function end() {
     <main>
       <Banner title="Vielen Dank!"></Banner>
       <div className="grid justify-items-center">
-        <div className="grid justify-items-center p-5 my-5 bg-green-200 rounded-md">
+        <div className="grid justify-items-center p-5 m-5 bg-green-200 rounded-md">
           <p className="text-xl ">
             Thank you for participating in our survey! Your feedback is
             important to us.
@@ -47,11 +47,11 @@ export default function end() {
         */}
 
         <div
-          className={`content-center p-5 my-5 rounded-md ${
+          className={`content-center p-5 m-5 rounded-md ${
             hasSubmitted ? "bg-green-200" : "bg-blue-200"
           }`}
         >
-          <p className="text-xl m-2 mx-10">
+          <p className="text-xl m-2">
             Would you like to receive information about projects in your area?
           </p>
           {hasSubmitted ? (

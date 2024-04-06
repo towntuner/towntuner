@@ -22,21 +22,38 @@ function classNames(...classes: any[]) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const campaignsStore = getStore("campaigns");
   const { blobs } = await campaignsStore.list();
-  let campaigns: CampaignCardProps[] = [];
-  campaigns = await Promise.all(
-    blobs.map(async (blob) => {
-      let campaignCard: CampaignCardProps = {} as CampaignCardProps;
-      campaignCard.campaign = await campaignsStore.get(blob.key, {
-        type: "json",
-      });
-      campaignCard.key = blob.key;
-      console.log(campaignCard);
-      return campaignCard;
-    })
-  );
-  console.log(campaigns);
+  const campaigns: CampaignCardProps[] = [];
+  for (const blob of blobs) {
+    const campaign = await campaignsStore.get(blob.key, {
+      type: "json",
+    });
+    if (!campaign) continue;
+    campaigns.push({
+      campaign,
+      key: blob.key,
+      color: "",
+    });
+  }
   return { props: { campaigns } };
 };
+
+function Hero() {
+  return (
+    <div className="mx-auto max-w-4xl py-16">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          Tune into the public opinion
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-gray-600">
+          Host your survey on TownTuner within a minute. We help getting it to
+          all your citizens by generating marketing material for you: Flyers, QR
+          Code Stickers, Instagram Ads, whatever you need. Analyze results
+          directly in TownTuner or export them to Excel.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function App({
   campaigns,
@@ -54,6 +71,7 @@ export default function App({
   return (
     <>
       <Header />
+      <Hero />
       <div className="m-4">
         <div className="flex items-center space-x-2">
           <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">

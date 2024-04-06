@@ -14,6 +14,10 @@ export default function AnalyticalMCCard({
     [question]: questions,
   }));
 
+  useEffect(() => {
+    console.log({ chartdata });
+  }, [chartdata]);
+
   return (
     <div>
       <Card>

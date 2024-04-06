@@ -28,7 +28,8 @@ async function updateResponse({
 }) {
   const store = getResponseStore(campaignId);
   const currentResponse =
-    (await store.get(respondentId, { type: "json" })) ?? [];
+    (await store.get(respondentId, { type: "json", consistency: "strong" })) ??
+    [];
   currentResponse[questionNumber] = response;
   await store.setJSON(respondentId, currentResponse);
 }
@@ -129,9 +130,9 @@ export default function SubmissionPage({
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
         <Description title={campaign.title} text={campaign.description} />
-        <div className="grid justify-items-center mb-16 text-xl font-extrabold">
+        <div className="grid justify-items-center mb-16 text-xl font-extrabold w-full">
           {question.question}
-          <div className="my-5 flex p-10">
+          <div className="w-full my-5 grid grid-cols-1 gap-5 p-10">
             {question.type === "single-select" ? (
               question.options?.map((option) => (
                 <form key={option.value} className="content-evenly">
@@ -152,19 +153,12 @@ export default function SubmissionPage({
                 </form>
               ))
             ) : (
-              <form className="w-1/2">
-                <div className="gap-2">
-                  <label
-                    htmlFor="description"
-                    className="mb-2 text-tremor-default text-tremor-content dark:text-dark-tremor-content"
-                  >
-                    Your answer
-                  </label>
+              <form className="w-full">
+                <div className="grid grid-cols-1 gap-2">
                   <Textarea
                     name="response"
                     placeholder="I think this is a great idea because..."
                     rows={6}
-                    className="my-2"
                   />
                   <input
                     name="question"
@@ -173,7 +167,7 @@ export default function SubmissionPage({
                     readOnly
                   ></input>
                 </div>
-                <div className="mt-6 flex justify-end">
+                <div className="mt-6 flex w-full justify-center">
                   <Button type="submit">Submit</Button>
                 </div>
               </form>

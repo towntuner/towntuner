@@ -53,14 +53,18 @@ export default function SubmissionPage({
         {/*
           TODO: Replace this with a real map
           */}
-        <AreaPreview latitude={lat} longitude={lon} />
-        <div className="content-center m-5 flex flex-col gap-5">
-          <Link href={`/submit/${router.query.id}/summary`}>
-            <MyButton text="Yes!"></MyButton>{" "}
-          </Link>
-          <Link href="/end">
-            <MyButton text="No."></MyButton>
-          </Link>
+        <div className="justify-center content-center mb-5">
+          <AreaPreview latitude={lat} longitude={lon} />
+        </div>
+        <div className="flex justify-center">
+          <div className="w-full grid grid-cols-1 gap-5">
+            <Link href={`/submit/${router.query.id}/summary`}>
+              <MyButton text="Yes!"></MyButton>
+            </Link>
+            <Link href="/end">
+              <MyButton text="No."></MyButton>
+            </Link>
+          </div>
         </div>
       </div>
     </main>
