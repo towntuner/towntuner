@@ -1,4 +1,4 @@
-import { RiEdit2Fill, RiInstagramFill } from "@remixicon/react";
+import { RiEdit2Fill, RiInstagramFill, RiQrCodeFill } from "@remixicon/react";
 import { Button } from "@tremor/react";
 import Script from "next/script";
 import { useState } from "react";
@@ -66,7 +66,7 @@ export function SocialsTab(props: { campaignId: string }) {
       </a>
 
       <a href={`/api/generate-qr-code?campaignId=${props.campaignId}`}>
-        <Button icon={RiInstagramFill} size="xl" type="button">
+        <Button icon={RiQrCodeFill} size="xl" type="button">
           QR Code
         </Button>
       </a>
