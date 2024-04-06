@@ -34,8 +34,9 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useRef, useState } from "react";
-import MapPicker from "react-google-map-picker";
+import React, { useMemo, useRef, useState } from "react";
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import Map, { Marker } from "react-map-gl";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -130,6 +131,28 @@ export default function CampaignHome({
 
   const campaignId = router.query.campaignId as string;
 
+  interface MarkerProps {
+    latitude: number;
+    longitude: number;
+  }
+
+  const [lat, setLat] = useState(0);
+  const [lng, setLng] = useState(0);
+
+  const [viewport, setViewport] = useState({
+    width: "100%",
+    height: 400,
+    latitude: 0,
+    longitude: 0,
+    zoom: 5,
+  });
+
+  const handleMapClick = (event: any) => {
+    console.log(event.lngLat.lat, event.lngLat.lng);
+    setLat(event.lngLat.lat);
+    setLng(event.lngLat.lng);
+  };
+
   return (
     <form className="flex flex-col">
       <Header backHref="/app" />
@@ -187,7 +210,25 @@ export default function CampaignHome({
           <AccordionList className="w-full">
             <Accordion className="w-full">
               <AccordionHeader>Location</AccordionHeader>
-              <AccordionBody></AccordionBody>
+              <AccordionBody>
+                <Map
+                  mapStyle="mapbox://styles/mapbox/streets-v11"
+                  style={{ width: "100%", height: "400px" }}
+                  onClick={handleMapClick}
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+                >
+                  {lat && lng && (
+                    <Marker longitude={lng} latitude={lat}>
+                      <Image
+                        src="/blue_circle.png"
+                        alt="marker"
+                        width={50}
+                        height={50}
+                      />
+                    </Marker>
+                  )}
+                </Map>
+              </AccordionBody>
             </Accordion>
           </AccordionList>
         </div>
