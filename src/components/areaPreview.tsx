@@ -26,7 +26,7 @@ export default function AreaPreview(props: {
       mapStyle="mapbox://styles/mapbox/streets-v11"
     >
       <Marker longitude={props.longitude} latitude={props.latitude}>
-        <Image src={marker} alt="marker" width={350} height={350} />
+        <Image src={marker} alt="marker" width={250} height={250} />
       </Marker>
     </Map>
   );
