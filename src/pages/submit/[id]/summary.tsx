@@ -35,7 +35,7 @@ export function ProjectSummary(props: { campaign: Campaign }) {
         alt="project image"
         className="m-5"
       />
-      <Description text={props.campaign.description}></Description>
+      <Description title={props.campaign.title} text={props.campaign.description}></Description>
     </div>
   );
 }
@@ -43,7 +43,6 @@ export function ProjectSummary(props: { campaign: Campaign }) {
 export default function ProjectSummaryPage({
   campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log("hello from SubmissionPage");
   const router = useRouter();
   return (
     <main>

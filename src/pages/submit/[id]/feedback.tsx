@@ -58,14 +58,14 @@ export async function getCampaign(
   // mock until question builder works
   campaign.questions = [
     {
-      title: "Frage 1",
+
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
       createdAt: "2021-10-01",
     },
     {
-      title: "Frage 2",
+
       question:
         "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "single-select",
@@ -131,10 +131,10 @@ export default function SubmissionPage({
     <main className=" text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <Description text=
-          {campaign.description} >  </Description>
+        <Description title={campaign.title} text=
+          {campaign.description} ></Description>
 
-        <div className="grid justify-items-center m-10 text-xl font-extrabold">
+        <div className="grid justify-items-center m-10 text-xl ">
           {campaign.questions[question_number].question}
           <div className="flex space-x-4">
             {campaign.questions[question_number].options?.map((option) => (
