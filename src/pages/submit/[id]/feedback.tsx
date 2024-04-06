@@ -134,10 +134,10 @@ export default function SubmissionPage({
         <Description title={campaign.title} text={campaign.description} />
         <div className="grid justify-items-center mb-16 text-xl font-extrabold">
           {question.question}
-          <div className="w-full my-5 flex">
+          <div className="my-5 flex p-10">
             {question.type === "single-select" ? (
               question.options?.map((option) => (
-                <form key={option.value} className="content-evenly ">
+                <form key={option.value} className="content-evenly">
                   <input
                     name="response"
                     value={option.value}
@@ -155,7 +155,7 @@ export default function SubmissionPage({
                 </form>
               ))
             ) : (
-              <form className="w-full">
+              <form className="w-1/2">
                 <div className="gap-2">
                   <label
                     htmlFor="description"

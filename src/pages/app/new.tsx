@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     icon: "💬",
     questions: [],
     deadline: deadline.toISOString(),
-    location: "",
+    location: "52.392215,13.125134",
     hasImage: false,
   } satisfies Campaign);
 
