@@ -43,7 +43,7 @@ export default async function handler(request: Request) {
         justifyContent: "center",
         backgroundImage: await fetchImageAsCSSRule(campaignId),
         backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        backgroundSize: "1080px 1080px",
         fontWeight: 600,
         color: "white",
       }}
