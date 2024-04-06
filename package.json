@@ -23,6 +23,7 @@
     "@vercel/og": "^0.6.2",
     "emoji-mart": "^5.5.2",
     "emoji-palette": "^0.0.3",
+    "formidable": "^3.5.1",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.2.0",
     "maplibre-gl": "^4.1.2",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
+    "@types/formidable": "^3.4.5",
     "@types/leaflet": "^1.9.9",
     "@types/node": "^20",
     "@types/react": "^18",

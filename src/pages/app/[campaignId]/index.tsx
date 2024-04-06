@@ -30,7 +30,7 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
 interface CampaignHomeProps {
   campaign: Campaign;
@@ -51,14 +51,14 @@ export default function CampaignHome({
 
   const [questions, setQuestions] = useState(campaign.questions ?? []);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const canSave =
     emoji !== campaign.icon ||
     title !== campaign.title ||
     desc !== campaign.description ||
     questions.length !== (campaign.questions ?? []).length ||
     questions.some((q, index) => {
-      console.log(q.question, "vs", campaign.questions[index].question);
-
       return (
         (campaign.questions.length > index &&
           q !== campaign.questions[index]) ||
@@ -101,6 +101,28 @@ export default function CampaignHome({
     setQuestions(updatedQuestions);
   }
 
+  async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    console.log(file);
+
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    await fetch(`/api/upload-campaign-image`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // router.reload();
+  }
+
   const campaignId = router.query.campaignId as string;
 
   return (
@@ -120,11 +142,27 @@ export default function CampaignHome({
       </div>
       <div className="flex flex-col w-full max-w-4xl mx-auto mb-20">
         <div className="flex flex-col items-start gap-3">
-          <EmojiButton onEmojiSelect={setEmoji}>
-            <div className="rounded-2xl bg-white -mt-10 text-5xl p-3 border-tremor-border border hover:bg-tremor-background-muted transition duration-100">
-              {emoji}
-            </div>
-          </EmojiButton>
+          <div className="flex flex-row justify-between w-full">
+            <EmojiButton onEmojiSelect={setEmoji}>
+              <div className="rounded-2xl bg-white -mt-10 text-5xl p-3 border-tremor-border border hover:bg-tremor-background-muted transition duration-100">
+                {emoji}
+              </div>
+            </EmojiButton>
+            <input
+              type="file"
+              className="hidden"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleUploadFile}
+            />
+            <Button
+              className="-translate-y-1/2 relative"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Upload image
+            </Button>
+          </div>
           <input name="emoji" className="hidden" value={emoji} readOnly />
           <RawInput
             name="title"
