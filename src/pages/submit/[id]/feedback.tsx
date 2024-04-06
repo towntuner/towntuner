@@ -5,7 +5,7 @@ import {
 } from "next";
 import { useRouter } from "next/router";
 
-import { Button } from "@tremor/react";
+import { Button, Textarea } from "@tremor/react";
 import MyButton from "@/components/MyButton";
 import Description from "@/components/Description";
 
@@ -68,20 +68,15 @@ export async function getCampaign(
       title: "Frage 2",
       question:
         "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
-      type: "single-select",
-      options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
+      type: "text",
       createdAt: "2021-10-01",
     },
   ];
   return campaign;
 }
 
-
-
-
-
 export const getServerSideProps = (async (context) => {
-  const campaignId = context.params!.id as string;
+  const campaignId = context.params!.id as string;  
   const campaign = await getCampaign(campaignId);
   if (!campaign) {
     return {
@@ -127,34 +122,61 @@ export default function SubmissionPage({
     (router.query.question as string) ?? "0"
   );
 
+  const question = campaign.questions[question_number];
+
   return (
     <main className="font-merri  text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <Description text=
-          {campaign.description} >  </Description>
-
+        <Description text={campaign.description}></Description>
         <div className="grid justify-items-center m-10 text-xl font-extrabold">
-          {campaign.questions[question_number].question}
+          {question.question}
           <div className="flex space-x-4">
-            {campaign.questions[question_number].options?.map((option) => (
-              <form key={option.value} className="content-evenly ">
-                <input
-                  name="response"
-                  value={option.value}
-                  hidden
-                  readOnly
-                ></input>
-                <input
-                  name="question"
-                  value={question_number}
-                  hidden
-                  readOnly
-                ></input>
+            {question.type === "single-select" ? (
+              question.options?.map((option) => (
+                <form key={option.value} className="content-evenly ">
+                  <input
+                    name="response"
+                    value={option.value}
+                    hidden
+                    readOnly
+                  ></input>
+                  <input
+                    name="question"
+                    value={question_number}
+                    hidden
+                    readOnly
+                  ></input>
 
-                <MyButton text={option.value}></MyButton>
+                  <MyButton text={option.value}></MyButton>
+                </form>
+              ))
+            ) : (
+              <form>
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="description"
+                    className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                  >
+                    Description
+                  </label>
+                  <Textarea
+                    name="response"
+                    placeholder="Deine Antwort"
+                    rows={6}
+                  />
+                  <input
+                    name="question"
+                    value={question_number}
+                    hidden
+                    readOnly
+                  ></input>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <Button type="submit">Submit</Button>
+                </div>
               </form>
-            ))}
+            )}
           </div>
         </div>
       </div>
