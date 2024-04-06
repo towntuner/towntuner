@@ -59,6 +59,12 @@ export function SocialsTab(props: { campaignId: string }) {
         </Button>
       </a>
 
+      <a href={`/api/generate-qr-code?campaignId=${props.campaignId}`}>
+        <Button icon={RiInstagramFill} size="xl" type="button">
+          QR Code
+        </Button>
+      </a>
+
       <Button
         icon={RiEdit2Fill}
         size="xl"
