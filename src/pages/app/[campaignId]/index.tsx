@@ -449,6 +449,8 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
+  console.log({ answersPerUser });
+
   return {
     props: { campaign, answersPerUser, views },
   };

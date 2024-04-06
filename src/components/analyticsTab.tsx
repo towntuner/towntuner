@@ -2,7 +2,7 @@ import { Button, Card } from "@tremor/react";
 import AnalyticalMCCard from "./analyMCCard";
 import AnalyticalTextCard from "./analyTextCard";
 import { Question } from "@/types/questions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QuestionCounts } from "@/types/analytics";
 import { RiTable2 } from "@remixicon/react";
 import { useRouter } from "next/router";
@@ -26,11 +26,12 @@ export default function AnalyticsTab({
   const [noAnswers, setNoAnswers] = useState(false);
   const questionCounts: QuestionCounts = {};
 
+  useEffect(() => {
+    console.log({ questionCounts });
+  }, [questionCounts]);
+
   if (!answersPerUser) {
     setNoAnswers(true);
-  }
-
-  if (!questions) {
   }
 
   if (answersPerUser && questions) {
