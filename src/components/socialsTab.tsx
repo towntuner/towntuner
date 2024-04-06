@@ -25,16 +25,22 @@ function AdobeExpress(props: { campaignId: string }) {
         );
 
         const imageResponse = await fetch(
-          `/api/generate-social-image?campaignId=${props.campaignId}`
+          `/api/${props.campaignId}/load-campaign-image`
         );
-        let string = "";
+        let base64 = "";
         new Uint8Array(await imageResponse.arrayBuffer()).forEach((byte) => {
-          string += String.fromCharCode(byte);
+          base64 += String.fromCharCode(byte);
         });
-        string = btoa(string);
+        base64 = btoa(base64);
 
-        ccEverywhere.editor.create(
-          {},
+        ccEverywhere.editor.createWithAsset(
+          {
+            asset: {
+              type: "image",
+              dataType: "base64",
+              data: `data:image/png;base64,${base64}`,
+            },
+          },
           {
             callbacks: {
               onPublish({ projectId }: { projectId: string }) {
