@@ -1,13 +1,20 @@
 import { ImageResponse } from "@vercel/og";
 import { getCampaign } from "../submit/[id]/feedback";
+import { getStore } from "@netlify/blobs";
 
 export const config = {
   runtime: "edge",
 };
 
-async function fetchImageAsCSSRule(url: string) {
-  const response = await fetch(url);
-  const base64 = Buffer.from(await response.arrayBuffer()).toString("base64");
+async function fetchImageAsCSSRule(campaignId: string) {
+  let campaignImage = await getStore("campaign-images").get(campaignId, {
+    type: "arrayBuffer",
+  });
+  if (!campaignImage) {
+    const fallback = await fetch("https://i.wfcdn.de/teaser/1920/67538.png");
+    campaignImage = await fallback.arrayBuffer();
+  }
+  const base64 = Buffer.from(campaignImage).toString("base64");
   const dataURL = `data:image/png;base64,${base64}`;
   const cssRule = `url(${dataURL})`;
   return cssRule;
@@ -24,7 +31,6 @@ export default async function handler(request: Request) {
   if (!campaign) return new Response(null, { status: 404 });
 
   const title = campaign.title;
-  const image = "https://i.wfcdn.de/teaser/1920/67538.png";
 
   const socialMediaPost = (
     <div
@@ -35,7 +41,7 @@ export default async function handler(request: Request) {
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "center",
-        backgroundImage: await fetchImageAsCSSRule(image),
+        backgroundImage: await fetchImageAsCSSRule(campaignId),
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         fontWeight: 600,
