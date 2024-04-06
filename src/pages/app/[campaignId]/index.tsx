@@ -154,7 +154,7 @@ export default function CampaignHome({
               type="file"
               className="hidden"
               ref={fileInputRef}
-              accept="image/*"
+              accept="image/png"
               onChange={handleUploadFile}
             />
             <Button
