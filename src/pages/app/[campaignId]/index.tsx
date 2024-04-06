@@ -171,6 +171,18 @@ export default function CampaignHome({
                 value={deadline}
                 readOnly
               />
+              <Link href={`/submit/${campaignId}`} passHref target="_blank">
+                <Button
+                  className="relative bg-white hover:!bg-white shadow-tremor-input border-tremor-border"
+                  type="button"
+                  variant="secondary"
+                  icon={RiExternalLinkFill}
+                  color="gray"
+                  iconPosition="right"
+                >
+                  Open survey
+                </Button>
+              </Link>
               <Button
                 className="relative"
                 type="button"
@@ -203,18 +215,6 @@ export default function CampaignHome({
             </Accordion>
           </AccordionList>
         </div>
-
-        <Link href={`/submit/${campaignId}`} passHref>
-          <Button
-            icon={RiExternalLinkFill}
-            className="mt-12"
-            iconPosition="right"
-            variant="light"
-            type="button"
-          >
-            Open Survey
-          </Button>
-        </Link>
 
         <div className="mt-12 mb-8">
           <TabGroup>
