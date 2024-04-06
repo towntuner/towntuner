@@ -54,9 +54,6 @@ export async function getCampaign(
   }
   console.log("REAL", campaign);
 
-  // TODO: implement location
-  campaign.location = "Potsdam Griebnitzsee";
-
   //TODO: mock until question builder works
   /*
   campaign.questions = [

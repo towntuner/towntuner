@@ -1,10 +1,31 @@
 import Banner from "@/components/Banner";
 import { Button, TextInput, Textarea } from "@tremor/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Map, { MapRef, Marker } from "react-map-gl";
+
+import "mapbox-gl/dist/mapbox-gl.css";
+import { MapPinIcon } from "@heroicons/react/16/solid";
 
 export default function end() {
   const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  const mapRef = useRef<MapRef>(null);
+
+  const [lat, setLat] = useState<number>(52.39352036290725);
+  const [lng, setLng] = useState<number>(13.12835004501224);
+
+  const handleMapClick = (event: any) => {
+    console.log(event.lngLat.lat, event.lngLat.lng);
+
+    mapRef.current?.flyTo({
+      center: [event.lngLat.lng, event.lngLat.lat],
+      zoom: 14,
+    });
+
+    setLat(event.lngLat.lat);
+    setLng(event.lngLat.lng);
+  };
   return (
     <main>
       <Banner title="Vielen Dank!"></Banner>
@@ -43,7 +64,7 @@ export default function end() {
             </>
           ) : (
             <>
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 gap-5">
                 <div>
                   <label
                     htmlFor="email"
@@ -53,14 +74,34 @@ export default function end() {
                   </label>
                   <TextInput name="email" placeholder="muster@mann.de" />
                 </div>
-                <div>
-                  <label
-                    htmlFor="postcode"
-                    className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                <div className="my-5">
+                  <Map
+                    mapStyle="mapbox://styles/mapbox/streets-v11"
+                    style={{
+                      width: "100%",
+                      height: "400px",
+                      position: "relative",
+                    }}
+                    initialViewState={{
+                      longitude: lng,
+                      latitude: lat,
+                      zoom: 13,
+                    }}
+                    onClick={handleMapClick}
+                    ref={mapRef}
+                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
                   >
-                    Your postcode
-                  </label>
-                  <TextInput name="postcode" placeholder="12345" />
+                    {lat && lng && (
+                      <Marker
+                        longitude={lng}
+                        latitude={lat}
+                        anchor="bottom"
+                        key="marker"
+                      >
+                        <MapPinIcon className="w-16 h-16" color="blue" />
+                      </Marker>
+                    )}
+                  </Map>
                 </div>
                 <div className="flex items-end justify-end">
                   <input name="question" hidden readOnly></input>
