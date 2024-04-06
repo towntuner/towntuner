@@ -4,11 +4,10 @@ import Image from "next/image";
 import marker from "./blue_circle.png";
 
 export default function AreaPreview(props: {
-  zoomLevel?: number;
   longitude: number;
   latitude: number;
 }) {
-  const zoomLevel = props.zoomLevel ?? 12;
+  const zoomLevel = 13;
   return (
     <Map
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -24,10 +23,10 @@ export default function AreaPreview(props: {
       maxZoom={zoomLevel}
       minZoom={zoomLevel}
       style={{ width: 400, height: 300 }}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
+      mapStyle="mapbox://styles/mapbox/streets-v11"
     >
       <Marker longitude={props.longitude} latitude={props.latitude}>
-        <Image src={marker} alt="marker" width={200} />
+        <Image src={marker} alt="marker" width={350} height={350} />
       </Marker>
     </Map>
   );
