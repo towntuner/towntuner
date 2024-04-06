@@ -38,6 +38,24 @@ export const getServerSideProps: GetServerSideProps = async () => {
   return { props: { campaigns } };
 };
 
+function Hero() {
+  return (
+    <div className="mx-auto max-w-4xl py-16">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+          Tune into the public opinion
+        </h1>
+        <p className="mt-6 text-lg leading-8 text-gray-600">
+          Host your survey on TownTuner within a minute. We help getting it to
+          all your citizens by generating marketing material for you: Flyers, QR
+          Code Stickers, Instagram Ads, whatever you need. Analyze results
+          directly in TownTuner or export them to Excel.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function App({
   campaigns,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -54,6 +72,7 @@ export default function App({
   return (
     <>
       <Header />
+      <Hero />
       <div className="m-4">
         <div className="flex items-center space-x-2">
           <h3 className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
