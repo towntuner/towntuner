@@ -1,8 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Image from "next/image";
-import mock_project_image from "./mock_radweg_stahnsdorfer.jpg";
 
 import { RiArrowRightLine } from "@remixicon/react";
 import { Button } from "@tremor/react";
@@ -25,12 +23,15 @@ export const getServerSideProps = (async (context) => {
   return { props: { campaign } };
 }) satisfies GetServerSideProps<{ campaign: Campaign }>;
 
-export function ProjectSummary(props: { campaign: Campaign }) {
+export function ProjectSummary(props: {
+  campaign: Campaign;
+  campaignId: string;
+}) {
   return (
     <div className="grid justify-items-center">
-      <Image
-        src={mock_project_image}
-        height={300}
+      <img
+        src={`/api/${props.campaignId}/load-campaign-image`}
+        style={{ height: 300 }}
         alt="project image"
         className="m-5"
       />
@@ -46,13 +47,14 @@ export default function ProjectSummaryPage({
   campaign,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
+  const campaignId = router.query.id as string;
   return (
     <main>
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <ProjectSummary campaign={campaign} />
+        <ProjectSummary campaign={campaign} campaignId={campaignId} />
         <div className="flex justify-center">
-          <Link href={`/submit/${router.query.id}/feedback`}>
+          <Link href={`/submit/${campaignId}/feedback`}>
             <Button
               icon={RiArrowRightLine}
               iconPosition="right"
