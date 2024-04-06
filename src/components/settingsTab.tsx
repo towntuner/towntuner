@@ -11,7 +11,16 @@ export default function SettingsTab() {
       <p className="mt-4 leading-6 text-tremor-default text-tremor-content dark:text-dark-tremor-content">
         This action cannot be undone. This will permanently delete the campaign.
       </p>
-      <Button color="red" className="mt-4">
+      <Button
+        color="red"
+        className="mt-4"
+        onClick={async () => {
+          await fetch(`/api/${router.query.campaignId}/delete`, {
+            method: "DELETE",
+          });
+          await router.push("/app");
+        }}
+      >
         Delete
       </Button>
     </div>
