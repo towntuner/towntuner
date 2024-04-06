@@ -3,11 +3,15 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import Image from "next/image";
 import marker from "./blue_circle.png";
 
-export default function AreaPreview(props: { zoomLevel?: number, longitude: number, latitude: number }) {
+export default function AreaPreview(props: {
+  zoomLevel?: number;
+  longitude: number;
+  latitude: number;
+}) {
   const zoomLevel = props.zoomLevel ?? 12;
   return (
     <Map
-      mapboxAccessToken = {process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
       initialViewState={{
         longitude: props.longitude,
         latitude: props.latitude,
@@ -19,7 +23,7 @@ export default function AreaPreview(props: { zoomLevel?: number, longitude: numb
       ]}
       maxZoom={zoomLevel}
       minZoom={zoomLevel}
-      style={{ width: 300, height: 300 }}
+      style={{ width: 400, height: 300 }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
     >
       <Marker longitude={props.longitude} latitude={props.latitude}>

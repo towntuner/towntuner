@@ -55,7 +55,7 @@ export async function getCampaign(
 
   campaign.location = "Potsdam Griebnitzsee";
 
-  // mock until question builder works
+  //TODO: mock until question builder works
   campaign.questions = [
     {
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
@@ -64,7 +64,8 @@ export async function getCampaign(
       createdAt: "2021-10-01",
     },
     {
-      question: "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
+      question:
+        "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "text",
       createdAt: "2021-10-01",
       options: [],
@@ -126,10 +127,10 @@ export default function SubmissionPage({
     <main className="font-merri  text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <Description title={campaign.title} text={campaign.description}></Description>
-        <div className="grid justify-items-center m-10 text-xl font-extrabold">
+        <Description title={campaign.title} text={campaign.description} />
+        <div className="grid justify-items-center mb-16 text-xl font-extrabold">
           {question.question}
-          <div className="flex space-x-4">
+          <div className="w-full my-5 flex">
             {question.type === "single-select" ? (
               question.options?.map((option) => (
                 <form key={option.value} className="content-evenly ">
@@ -150,18 +151,19 @@ export default function SubmissionPage({
                 </form>
               ))
             ) : (
-              <form>
-                <div className="flex flex-col gap-2">
+              <form className="w-full">
+                <div className="gap-2">
                   <label
                     htmlFor="description"
-                    className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                    className="mb-2 text-tremor-default text-tremor-content dark:text-dark-tremor-content"
                   >
-                    Description
+                    Your answer
                   </label>
                   <Textarea
                     name="response"
-                    placeholder="Deine Antwort"
+                    placeholder="I think this is a great idea because..."
                     rows={6}
+                    className="my-2"
                   />
                   <input
                     name="question"

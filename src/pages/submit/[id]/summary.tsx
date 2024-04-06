@@ -12,7 +12,6 @@ import Description from "@/components/Description";
 import { getCampaign } from "./feedback";
 import { Campaign } from "@/types/campaign";
 
-
 export const getServerSideProps = (async (context) => {
   const campaignId = context.params!.id as string;
 
@@ -35,7 +34,10 @@ export function ProjectSummary(props: { campaign: Campaign }) {
         alt="project image"
         className="m-5"
       />
-      <Description title={props.campaign.title} text={props.campaign.description}></Description>
+      <Description
+        title={props.campaign.title}
+        text={props.campaign.description}
+      ></Description>
     </div>
   );
 }
@@ -55,9 +57,9 @@ export default function ProjectSummaryPage({
               icon={RiArrowRightLine}
               iconPosition="right"
               variant="light"
-              className="text-[#86a3b3]"
+              className="text-white m-5 mb-20 rounded-full px-10 py-3 bg-tremor-brand hover:bg-tremor-brand-emphasis hover:text-white"
             >
-              Feedback geben
+              I want to participate!
             </Button>
           </Link>
         </div>

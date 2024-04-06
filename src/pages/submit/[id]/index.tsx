@@ -39,19 +39,20 @@ export default function SubmissionPage({
     <main>
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Sind Sie häufig in {campaign.location}?</p>
-        <div className="mb-5">
-          <AreaPreview
-            latitude={52.39170852631827}
-            longitude={13.126965482312585}
-          />
-        </div>
-        <div className="content-center space-x-10">
+        <p className="text-xl m-5">Are you often in {campaign.location}?</p>
+        {/*
+          TODO: Replace this with a real map
+          */}
+        <AreaPreview
+          latitude={52.39170852631827}
+          longitude={13.126965482312585}
+        />
+        <div className="content-center m-5">
           <Link href={`/submit/${router.query.id}/summary`}>
-            <MyButton text="Ja"></MyButton>{" "}
+            <MyButton text="Yes!"></MyButton>{" "}
           </Link>
           <Link href="/end">
-            <MyButton text="Nein"></MyButton>
+            <MyButton text="No."></MyButton>
           </Link>
         </div>
       </div>
