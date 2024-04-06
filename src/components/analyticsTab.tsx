@@ -61,16 +61,8 @@ export default function AnalyticsTab({
           </>
         ) : (
           <>
-            <a
-              href={`/api/csv-export?campaignId=${campaignId}`}
-            >
-              <Button icon={RiTable2} size="xl" type="button" variant="light" iconPosition="right">
-                Als CSV exportieren
-              </Button>
-            </a>
-
             <div className="grid grid-cols-2 gap-4">
-              <Card className="mb-5" decoration="top" decorationColor="indigo">
+              <Card className="" decoration="top" decorationColor="indigo">
                 <p className="text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content">
                   Views
                 </p>
@@ -78,21 +70,9 @@ export default function AnalyticsTab({
                   <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
                     {views}
                   </p>
-                  {/* 
-                  <span
-                    className={classNames(
-                      "positive" == "positive"
-                        ? "text-emerald-700 dark:text-emerald-500"
-                        : "text-red-700 dark:text-red-500",
-                      "text-tremor-default font-medium"
-                    )}
-                  >
-                    +14,3%
-                  </span>
-                */}
                 </div>
               </Card>
-              <Card className="mb-5" decoration="top" decorationColor="indigo">
+              <Card className="" decoration="top" decorationColor="indigo">
                 <p className="text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content">
                   Answers
                 </p>
@@ -100,20 +80,21 @@ export default function AnalyticsTab({
                   <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
                     {answersPerUser.length}
                   </p>
-                  {/*
-                  <span
-                    className={classNames(
-                      "positive" == "positive"
-                        ? "text-emerald-700 dark:text-emerald-500"
-                        : "text-red-700 dark:text-red-500",
-                      "text-tremor-default font-medium"
-                    )}
-                  >
-                    +12,3%
-                  </span>
-                    */}
                 </div>
               </Card>
+              <div>
+                <a href={`/api/csv-export?campaignId=${campaignId}`}>
+                  <Button
+                    icon={RiTable2}
+                    size="xl"
+                    type="button"
+                    variant="light"
+                    iconPosition="right"
+                  >
+                    Export as CSV
+                  </Button>
+                </a>
+              </div>
             </div>
             <h3 className="text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong my-4 ">
               Single-select Questions

@@ -1,8 +1,10 @@
 import Banner from "@/components/Banner";
 import { Button, TextInput, Textarea } from "@tremor/react";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function end() {
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   return (
     <main>
       <Banner title="Vielen Dank!"></Banner>
@@ -23,34 +25,57 @@ export default function end() {
         TODO: Submit Data and show a thank you message
         */}
 
-        <div className="content-center p-5 my-5 bg-blue-200 rounded-md w-">
+        <div
+          className={`content-center p-5 my-5 rounded-md ${
+            hasSubmitted ? "bg-green-200" : "bg-blue-200"
+          }`}
+        >
           <p className="text-xl m-2 mx-10">
             Would you like to receive information about projects in your area?
           </p>
-          <div className="grid grid-cols-3 gap-5">
-            <div>
-              <label
-                htmlFor="email"
-                className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
-              >
-                Your email
-              </label>
-              <TextInput name="email" placeholder="muster@mann.de" />
-            </div>
-            <div>
-              <label
-                htmlFor="postcode"
-                className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
-              >
-                Your postcode
-              </label>
-              <TextInput name="postcode" placeholder="12345" />
-            </div>
-            <div className="flex items-end justify-end">
-              <input name="question" hidden readOnly></input>
-              <Button type="submit">Submit</Button>
-            </div>
-          </div>
+          {hasSubmitted ? (
+            <>
+              <div className="content-center">
+                <p className="text-l m-5 text-green-500 justify-center">
+                  ✅ Thank you! We will keep you up-to-date!{" "}
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="grid grid-cols-3 gap-5">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                  >
+                    Your email
+                  </label>
+                  <TextInput name="email" placeholder="muster@mann.de" />
+                </div>
+                <div>
+                  <label
+                    htmlFor="postcode"
+                    className="text-tremor-default text-tremor-content dark:text-dark-tremor-content"
+                  >
+                    Your postcode
+                  </label>
+                  <TextInput name="postcode" placeholder="12345" />
+                </div>
+                <div className="flex items-end justify-end">
+                  <input name="question" hidden readOnly></input>
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      setHasSubmitted(true);
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </main>
