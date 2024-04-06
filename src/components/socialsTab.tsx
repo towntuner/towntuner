@@ -3,6 +3,12 @@ import { Button } from "@tremor/react";
 import Script from "next/script";
 import { useState } from "react";
 
+declare global {
+  interface Window {
+    CCEverywhere: any;
+  }
+}
+
 function AdobeExpress(props: { campaignId: string }) {
   return (
     <Script
@@ -27,14 +33,17 @@ function AdobeExpress(props: { campaignId: string }) {
         });
         string = btoa(string);
 
-        ccEverywhere.editor.create({}, {
-          callbacks: {
-            onPublish({ projectId }: { projectId: string }) {
-              // TODO: store this somewhere, so project can be re-opened later
-              console.log("Adobe Project ID: ", projectId)
-            }
+        ccEverywhere.editor.create(
+          {},
+          {
+            callbacks: {
+              onPublish({ projectId }: { projectId: string }) {
+                // TODO: store this somewhere, so project can be re-opened later
+                console.log("Adobe Project ID: ", projectId);
+              },
+            },
           }
-        });
+        );
       }}
     />
   );
