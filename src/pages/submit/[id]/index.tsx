@@ -47,7 +47,7 @@ export default function SubmissionPage({
           latitude={52.39170852631827}
           longitude={13.126965482312585}
         />
-        <div className="content-center m-5 flex flex-col gap-5 p-5">
+        <div className="content-cente gap-5r p-5">
           <Link href={`/submit/${router.query.id}/summary`}>
             <MyButton text="Yes!"></MyButton>{" "}
           </Link>
