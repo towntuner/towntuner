@@ -22,18 +22,18 @@ function classNames(...classes: any[]) {
 export const getServerSideProps: GetServerSideProps = async () => {
   const campaignsStore = getStore("campaigns");
   const { blobs } = await campaignsStore.list();
-  const campaigns: CampaignCardProps[] = await Promise.all(
-    blobs.map(async (blob) => {
-      const campaignCard: CampaignCardProps = {
-        campaign: await campaignsStore.get(blob.key, {
-          type: "json",
-        }),
-        key: blob.key,
-        color: ""
-      };
-      return campaignCard;
-    })
-  );
+  const campaigns: CampaignCardProps[] = [];
+  for (const blob of blobs) {
+    const campaign = await campaignsStore.get(blob.key, {
+      type: "json",
+    });
+    if (!campaign) continue;
+    campaigns.push({
+      campaign,
+      key: blob.key,
+      color: "",
+    });
+  }
   return { props: { campaigns } };
 };
 
