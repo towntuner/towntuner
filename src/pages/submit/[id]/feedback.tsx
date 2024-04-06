@@ -64,11 +64,10 @@ export async function getCampaign(
       createdAt: "2021-10-01",
     },
     {
-      question:
-        "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
+      question: "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "text",
-
       createdAt: "2021-10-01",
+      options: [],
     },
   ];
   return campaign;
@@ -127,7 +126,7 @@ export default function SubmissionPage({
     <main className="font-merri  text-[#072448]">
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <Description text={campaign.description}></Description>
+        <Description title={campaign.title} text={campaign.description}></Description>
         <div className="grid justify-items-center m-10 text-xl font-extrabold">
           {question.question}
           <div className="flex space-x-4">
