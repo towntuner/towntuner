@@ -38,14 +38,18 @@ export default function SubmissionPage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
 
+  console.log("CAMPAIGN", campaign);
+
   const lat = Number(campaign.location.split(",")[0]);
   const lon = Number(campaign.location.split(",")[1]);
+
+  console.log("lat", lat, "lon", lon);
 
   return (
     <main>
       <Banner title={campaign.title}></Banner>
       <div className="grid justify-items-center">
-        <p className="text-xl m-5">Are you often in {campaign.location}?</p>
+        <p className="text-xl m-5">Are you often here?</p>
         {/*
           TODO: Replace this with a real map
           */}
