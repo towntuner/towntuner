@@ -52,10 +52,13 @@ export async function getCampaign(
   if (!campaign) {
     return;
   }
+  console.log("REAL", campaign);
 
+  // TODO: implement location
   campaign.location = "Potsdam Griebnitzsee";
 
   //TODO: mock until question builder works
+  /*
   campaign.questions = [
     {
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
@@ -71,6 +74,7 @@ export async function getCampaign(
       options: [],
     },
   ];
+  */
   return campaign;
 }
 
