@@ -58,17 +58,16 @@ export async function getCampaign(
   // mock until question builder works
   campaign.questions = [
     {
-      title: "Frage 1",
       question: "Finden Sie es gut wenn der Fahrradweg gebaut wird?",
       type: "single-select",
       options: [{ value: "Ja" }, { value: "Nein" }, { value: "Vielleicht" }],
       createdAt: "2021-10-01",
     },
     {
-      title: "Frage 2",
       question:
         "Haben Sie Sorgen oder Bedenken, wenn dieses Projekt umgesetzt wird?",
       type: "text",
+
       createdAt: "2021-10-01",
     },
   ];
@@ -76,7 +75,7 @@ export async function getCampaign(
 }
 
 export const getServerSideProps = (async (context) => {
-  const campaignId = context.params!.id as string;  
+  const campaignId = context.params!.id as string;
   const campaign = await getCampaign(campaignId);
   if (!campaign) {
     return {

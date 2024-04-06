@@ -1,10 +1,9 @@
 import { Card } from "@tremor/react";
 import AnalyticalMCCard from "./analyMCCard";
 import AnalyticalTextCard from "./analyTextCard";
-import { Question, QuestionMC, QuestionText } from "@/types/questions";
-import { useEffect, useState } from "react";
+import { Question } from "@/types/questions";
+import { useState } from "react";
 import { QuestionCounts } from "@/types/analytics";
-import { create } from "domain";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -13,57 +12,27 @@ function classNames(...classes: any) {
 export default function AnalyticsTab({
   answersPerUser,
   questions,
+  views,
 }: {
   answersPerUser: string[][];
   questions: Question[];
+  views: number;
 }) {
   const [noAnswers, setNoAnswers] = useState(false);
   const questionCounts: QuestionCounts = {};
-
-  console.log("QUESTIONS", questions);
 
   if (!answersPerUser) {
     setNoAnswers(true);
   }
 
   if (!questions) {
-    // TODO: Remove this -> show that you need to create Answers to see analytics
-    questions = [
-      {
-        type: "single-select",
-        title: "What is your favorite color?",
-        options: [
-          { value: "Red" },
-          { value: "Blue" },
-          { value: "Green" },
-          { value: "Yellow" },
-        ],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        type: "single-select",
-        title: "What is your favorite animal?",
-        options: [
-          { value: "Dog" },
-          { value: "Cat" },
-          { value: "Bird" },
-          { value: "Fish" },
-        ],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        type: "text",
-        title: "What is your favorite food?",
-        createdAt: new Date().toISOString(),
-      },
-    ];
   }
 
   if (answersPerUser && questions) {
     answersPerUser.forEach((answers: string[]) => {
       answers.forEach((answer: string, index: number) => {
-        const question = questions[index].title;
-        const type = questions[index].type;
+        const question = questions[index]?.question ?? "No question";
+        const type = questions[index]?.type ?? "text";
 
         if (!questionCounts[type]) {
           questionCounts[type] = {};
@@ -78,8 +47,6 @@ export default function AnalyticsTab({
     });
   }
 
-  console.log(questionCounts);
-
   return (
     <div>
       <div>
@@ -90,14 +57,15 @@ export default function AnalyticsTab({
         ) : (
           <>
             <div className="grid grid-cols-2 gap-4">
-              <Card className="mb-5">
+              <Card className="mb-5" decoration="top" decorationColor="indigo">
                 <p className="text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content">
                   Views
                 </p>
                 <div className="mt-2 flex items-baseline space-x-2.5">
                   <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                    12,506
+                    {views}
                   </p>
+                  {/* 
                   <span
                     className={classNames(
                       "positive" == "positive"
@@ -108,16 +76,18 @@ export default function AnalyticsTab({
                   >
                     +14,3%
                   </span>
+                */}
                 </div>
               </Card>
-              <Card className="mb-5">
+              <Card className="mb-5" decoration="top" decorationColor="indigo">
                 <p className="text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content">
                   Answers
                 </p>
                 <div className="mt-2 flex items-baseline space-x-2.5">
                   <p className="text-tremor-metric font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
-                    1,506
+                    {answersPerUser.length}
                   </p>
+                  {/*
                   <span
                     className={classNames(
                       "positive" == "positive"
@@ -128,6 +98,7 @@ export default function AnalyticsTab({
                   >
                     +12,3%
                   </span>
+                    */}
                 </div>
               </Card>
             </div>
@@ -155,23 +126,19 @@ export default function AnalyticsTab({
             <h3 className="my-4 text-tremor-title font-bold text-tremor-content-strong dark:text-dark-tremor-content-strong">
               Text Questions
             </h3>
-            <div className="grid grid-cols-2 gap-4">
-              {Object.entries(questionCounts).map(([type, questions]) => {
-                if (type === "text") {
-                  return Object.entries(questions).map(
-                    ([question, answers]) => (
-                      <AnalyticalTextCard
-                        key={question}
-                        question={question}
-                        answers={answers}
-                      />
-                    )
-                  );
-                } else {
-                  return null;
-                }
-              })}
-            </div>
+            {Object.entries(questionCounts).map(([type, questions]) => {
+              if (type === "text") {
+                return Object.entries(questions).map(([question, answers]) => (
+                  <AnalyticalTextCard
+                    key={question}
+                    question={question}
+                    answers={answers}
+                  />
+                ));
+              } else {
+                return null;
+              }
+            })}
           </>
         )}
       </div>
