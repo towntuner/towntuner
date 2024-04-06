@@ -6,6 +6,8 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { Campaign } from "@/types/campaign";
 import { generatePalette } from "emoji-palette";
 import { useEffect } from "react";
+import { PlusIcon } from "@heroicons/react/16/solid";
+import { useRouter } from "next/router";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -46,6 +48,8 @@ export default function App({
       ];
     });
   }, []);
+
+  const router = useRouter();
 
   return (
     <>
@@ -93,6 +97,18 @@ export default function App({
               </span>
             </Card>
           ))}
+          <button
+            onClick={() => {
+              router.push("/app/new");
+            }}
+            type="button"
+            className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 p-4 text-center hover:border-gray-400 focus:outline-none"
+          >
+            <PlusIcon className="w-8 h-8 mx-auto" />
+            <span className="mt-2 block text-sm font-semibold text-gray-900">
+              Add campaign
+            </span>
+          </button>
         </div>
       </div>
     </>
