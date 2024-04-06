@@ -35,6 +35,7 @@
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
     "react-map-gl": "^7.1.7",
+    "sharp": "^0.33.3",
     "superjson": "^2.2.1",
     "tailwind-variants": "^0.2.1",
     "use-debounce": "^10.0.0",
