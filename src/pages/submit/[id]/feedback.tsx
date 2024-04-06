@@ -28,7 +28,8 @@ async function updateResponse({
 }) {
   const store = getResponseStore(campaignId);
   const currentResponse =
-    (await store.get(respondentId, { type: "json" })) ?? [];
+    (await store.get(respondentId, { type: "json", consistency: "strong" })) ??
+    [];
   currentResponse[questionNumber] = response;
   await store.setJSON(respondentId, currentResponse);
 }
