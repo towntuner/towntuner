@@ -17,6 +17,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     questions: [],
     deadline: new Date().toISOString(),
     location: "",
+    hasImage: false,
   } satisfies Campaign);
 
   return {

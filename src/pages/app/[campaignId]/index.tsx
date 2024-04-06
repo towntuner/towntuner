@@ -117,15 +117,12 @@ export default function CampaignHome({
     const formData = new FormData();
     formData.append("file", file);
 
-    await fetch(`/api/upload-campaign-image`, {
+    await fetch(`/api/${router.query.campaignId}/upload-campaign-image`, {
       method: "POST",
       body: formData,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
     });
 
-    // router.reload();
+    router.reload();
   }
 
   const campaignId = router.query.campaignId as string;
@@ -134,16 +131,16 @@ export default function CampaignHome({
     <form className="flex flex-col">
       <Header backHref="/app" />
       <div className="flex flex-col items-stretch">
-        <div aria-hidden="true" className="relative h-52">
-          <Image
-            src={`https://images.unsplash.com/photo-1485381771061-e2cbd5317d9c?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-            alt=""
-            fill
-            quality={80}
-            sizes="100vw"
-            className="h-52 w-full object-cover object-center"
-          />
-        </div>
+        {campaign.hasImage ? (
+          <div aria-hidden="true" className="relative h-52">
+            <img
+              src={`/api/${campaignId}/load-campaign-image`}
+              className="h-52 w-full object-cover object-center"
+            />
+          </div>
+        ) : (
+          <div className="mt-20" />
+        )}
       </div>
       <div className="flex flex-col w-full max-w-4xl mx-auto mb-20">
         <div className="flex flex-col items-start gap-3">
