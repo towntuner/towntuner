@@ -60,13 +60,13 @@ export function SocialsTab(props: { campaignId: string }) {
   return (
     <div className="flex space-x-4">
       <a href={`/api/generate-social-image?campaignId=${props.campaignId}`}>
-        <Button icon={RiInstagramFill} size="xl" type="button">
+        <Button icon={RiInstagramFill} size="xl" type="button" color="purple">
           Instagram Ad
         </Button>
       </a>
 
       <a href={`/api/generate-qr-code?campaignId=${props.campaignId}`}>
-        <Button icon={RiQrCodeFill} size="xl" type="button">
+        <Button icon={RiQrCodeFill} size="xl" type="button" color="lime">
           QR Code
         </Button>
       </a>
@@ -76,6 +76,7 @@ export function SocialsTab(props: { campaignId: string }) {
         size="xl"
         type="button"
         onClick={() => setShowExpress(true)}
+        color="orange"
       >
         Adobe Express öffnen
       </Button>
