@@ -1,9 +1,11 @@
-import { Card } from "@tremor/react";
+import { Button, Card } from "@tremor/react";
 import AnalyticalMCCard from "./analyMCCard";
 import AnalyticalTextCard from "./analyTextCard";
 import { Question } from "@/types/questions";
 import { useState } from "react";
 import { QuestionCounts } from "@/types/analytics";
+import { RiTable2 } from "@remixicon/react";
+import { useRouter } from "next/router";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -18,6 +20,9 @@ export default function AnalyticsTab({
   questions: Question[];
   views: number;
 }) {
+  const router = useRouter();
+  const campaignId = router.query.campaignId;
+
   const [noAnswers, setNoAnswers] = useState(false);
   const questionCounts: QuestionCounts = {};
 
@@ -56,6 +61,14 @@ export default function AnalyticsTab({
           </>
         ) : (
           <>
+            <a
+              href={`/api/csv-export?campaignId=${campaignId}`}
+            >
+              <Button icon={RiTable2} size="xl" type="button" variant="light" iconPosition="right">
+                Als CSV exportieren
+              </Button>
+            </a>
+
             <div className="grid grid-cols-2 gap-4">
               <Card className="mb-5" decoration="top" decorationColor="indigo">
                 <p className="text-tremor-default font-medium text-tremor-content dark:text-dark-tremor-content">
