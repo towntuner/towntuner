@@ -24,32 +24,43 @@ function AdobeExpress(props: { campaignId: string }) {
           }
         );
 
+        const callbacks = {
+          onPublish({ projectId }: { projectId: string }) {
+            // TODO: store this somewhere, so project can be re-opened later
+            console.log("Adobe Project ID: ", projectId);
+          },
+        };
+
         const imageResponse = await fetch(
           `/api/${props.campaignId}/load-campaign-image`
         );
-        let base64 = "";
-        new Uint8Array(await imageResponse.arrayBuffer()).forEach((byte) => {
-          base64 += String.fromCharCode(byte);
-        });
-        base64 = btoa(base64);
+        if (imageResponse.ok) {
+          let base64 = "";
+          new Uint8Array(await imageResponse.arrayBuffer()).forEach((byte) => {
+            base64 += String.fromCharCode(byte);
+          });
+          base64 = btoa(base64);
 
-        ccEverywhere.editor.createWithAsset(
-          {
-            asset: {
-              type: "image",
-              dataType: "base64",
-              data: `data:image/png;base64,${base64}`,
-            },
-          },
-          {
-            callbacks: {
-              onPublish({ projectId }: { projectId: string }) {
-                // TODO: store this somewhere, so project can be re-opened later
-                console.log("Adobe Project ID: ", projectId);
+          ccEverywhere.editor.createWithAsset(
+            {
+              asset: {
+                type: "image",
+                dataType: "base64",
+                data: `data:image/png;base64,${base64}`,
               },
             },
-          }
-        );
+            {
+              callbacks,
+            }
+          );
+        } else {
+          ccEverywhere.editor.create(
+            {},
+            {
+              callbacks,
+            }
+          );
+        }
       }}
     />
   );
